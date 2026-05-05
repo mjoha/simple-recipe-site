@@ -5,6 +5,12 @@
       "title": "Baseline project structure",
       "status": "done",
       "spec": ".ai/features/001-baseline-project.md"
+    },
+    {
+      "id": "002-postgresql-recipes-read-model",
+      "title": "PostgreSQL recipe read model",
+      "status": "ready",
+      "spec": ".ai/features/002-postgresql-recipes-read-model.md"
     }
   ],
   "decisions": []
