@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: simple-recipe-site-postgres
+    environment:
+      POSTGRES_DB: simple_recipe_site
+      POSTGRES_USER: recipe_app
+      POSTGRES_PASSWORD: recipe_app
+    ports:
+      - "55432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U recipe_app -d simple_recipe_site"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgres_data:

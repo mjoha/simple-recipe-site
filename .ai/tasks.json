@@ -9,7 +9,7 @@
     {
       "id": "002-postgresql-recipes-read-model",
       "title": "PostgreSQL recipe read model",
-      "status": "ready",
+      "status": "done",
       "spec": ".ai/features/002-postgresql-recipes-read-model.md"
     }
   ],

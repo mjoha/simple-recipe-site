@@ -11,3 +11,26 @@ main {
     margin: 3rem auto;
     padding: 0 1rem;
 }
+
+ul {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+}
+
+li {
+    background: #fff;
+    border: 1px solid #e8dfd2;
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+
+h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+p {
+    margin: 0.3rem 0;
+}

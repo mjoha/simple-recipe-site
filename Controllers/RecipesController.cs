@@ -1,14 +1,21 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using SimpleRecipeSite.Data;
 
 namespace SimpleRecipeSite.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class RecipesController : ControllerBase
+public class RecipesController(AppDbContext dbContext) : ControllerBase
 {
     [HttpGet]
-    public IActionResult Get()
+    public async Task<IActionResult> Get()
     {
-        return Ok(new { message = "Recipes API ready" });
+        var recipes = await dbContext.Recipes
+            .AsNoTracking()
+            .OrderBy(recipe => recipe.Title)
+            .ToListAsync();
+
+        return Ok(recipes);
     }
 }
