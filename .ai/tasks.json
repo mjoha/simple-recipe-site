@@ -1,0 +1,11 @@
+{
+  "tasks": [
+    {
+      "id": "001-baseline-project",
+      "title": "Baseline project structure",
+      "status": "done",
+      "spec": ".ai/features/001-baseline-project.md"
+    }
+  ],
+  "decisions": []
+}

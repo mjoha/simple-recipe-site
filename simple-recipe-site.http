@@ -1,0 +1,6 @@
+@simple_recipe_site_HostAddress = http://localhost:5002
+
+GET {{simple_recipe_site_HostAddress}}/api/recipes
+Accept: application/json
+
+###

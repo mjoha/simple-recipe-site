@@ -1,0 +1,14 @@
+{
+  "name": "simple-recipe-site",
+  "private": true,
+  "scripts": {
+    "build": "tsc",
+    "watch:ts": "tsc -w",
+    "watch:dotnet": "dotnet watch run --launch-profile http",
+    "dev": "npm run build && concurrently \"npm:watch:ts\" \"npm:watch:dotnet\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "typescript": "^5.8.3"
+  }
+}
