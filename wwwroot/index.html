@@ -3,16 +3,24 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Simple Recipe Site</title>
+    <title>Recipes</title>
     <link rel="stylesheet" href="/styles/site.css">
 </head>
 <body>
     <main>
-        <h1>Simple Recipe Site</h1>
+        <h1>Recipes</h1>
+        <input id="search-input" type="search" placeholder="Search recipes..." autocomplete="off">
         <p id="status" aria-live="polite"></p>
-        <section aria-labelledby="recipes-heading">
-            <h2 id="recipes-heading">Recipes</h2>
-            <ul id="recipes-list"></ul>
+        <section id="recipe-list-view">
+            <p id="empty-state" hidden>No recipes match your search.</p>
+            <div id="recipe-groups"></div>
+        </section>
+        <section id="recipe-detail-view" hidden>
+            <button id="back-button" type="button" class="back-link">
+                <span aria-hidden="true">←</span>
+                <span>Back</span>
+            </button>
+            <article id="recipe-detail"></article>
         </section>
     </main>
     <script src="/scripts/app.js"></script>

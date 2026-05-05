@@ -17,6 +17,12 @@
       "title": "Harden recipe read slice",
       "status": "done",
       "spec": ".ai/features/003-hardening-recipe-read-slice.md"
+    },
+    {
+      "id": "004-baseline-recipe-browser-ui",
+      "title": "Baseline recipe browser UI",
+      "status": "done",
+      "spec": ".ai/features/004-baseline-recipe-browser-ui.md"
     }
   ],
   "decisions": []
