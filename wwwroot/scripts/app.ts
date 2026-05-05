@@ -36,13 +36,23 @@ async function loadRecipes(): Promise<void> {
             const listItem = document.createElement("li");
             const servingsText = recipe.servings ? `${recipe.servings}` : "N/A";
             const categoryText = recipe.category ?? "Uncategorized";
+            const titleElement = document.createElement("h3");
+            titleElement.textContent = recipe.title;
 
-            listItem.innerHTML = `
-                <h3>${recipe.title}</h3>
-                <p>${recipe.description ?? ""}</p>
-                <p><strong>Category:</strong> ${categoryText}</p>
-                <p><strong>Servings:</strong> ${servingsText}</p>
-            `;
+            const descriptionElement = document.createElement("p");
+            descriptionElement.textContent = recipe.description ?? "";
+
+            const categoryElement = document.createElement("p");
+            const categoryLabel = document.createElement("strong");
+            categoryLabel.textContent = "Category:";
+            categoryElement.append(categoryLabel, ` ${categoryText}`);
+
+            const servingsElement = document.createElement("p");
+            const servingsLabel = document.createElement("strong");
+            servingsLabel.textContent = "Servings:";
+            servingsElement.append(servingsLabel, ` ${servingsText}`);
+
+            listItem.append(titleElement, descriptionElement, categoryElement, servingsElement);
 
             recipesListElement.appendChild(listItem);
         }

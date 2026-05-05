@@ -11,6 +11,12 @@
       "title": "PostgreSQL recipe read model",
       "status": "done",
       "spec": ".ai/features/002-postgresql-recipes-read-model.md"
+    },
+    {
+      "id": "003-hardening-recipe-read-slice",
+      "title": "Harden recipe read slice",
+      "status": "done",
+      "spec": ".ai/features/003-hardening-recipe-read-slice.md"
     }
   ],
   "decisions": []

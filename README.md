@@ -11,6 +11,15 @@
 2. Apply database migrations:
 
    ```bash
+   dotnet tool restore
+   dotnet ef database update
+   ```
+
+   If your existing local Docker volume was created with older migrations and you hit schema mismatch issues, reset local DB volume first:
+
+   ```bash
+   docker compose down -v
+   docker compose up -d
    dotnet ef database update
    ```
 

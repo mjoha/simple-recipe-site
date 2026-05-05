@@ -12,6 +12,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         modelBuilder.Entity<Recipe>(entity =>
         {
             entity.ToTable("recipes");
+            entity.Property(recipe => recipe.Id).HasColumnName("id");
             entity.Property(recipe => recipe.Title).HasColumnName("title");
             entity.Property(recipe => recipe.Description).HasColumnName("description");
             entity.Property(recipe => recipe.Ingredients).HasColumnName("ingredients");

@@ -12,7 +12,7 @@ using SimpleRecipeSite.Data;
 namespace SimpleRecipeSite.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260505094425_InitialRecipes")]
+    [Migration("20260505102355_InitialRecipes")]
     partial class InitialRecipes
     {
         /// <inheritdoc />
@@ -29,7 +29,8 @@ namespace SimpleRecipeSite.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 

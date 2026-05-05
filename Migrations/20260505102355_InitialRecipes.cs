@@ -16,7 +16,7 @@ namespace SimpleRecipeSite.Migrations
                 name: "recipes",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
+                    id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     title = table.Column<string>(type: "text", nullable: false),
                     description = table.Column<string>(type: "text", nullable: true),
@@ -32,12 +32,12 @@ namespace SimpleRecipeSite.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_recipes", x => x.Id);
+                    table.PrimaryKey("PK_recipes", x => x.id);
                 });
 
             migrationBuilder.InsertData(
                 table: "recipes",
-                columns: new[] { "Id", "category", "cook_minutes", "created_at_utc", "description", "ingredients", "instructions", "prep_minutes", "servings", "source", "title", "updated_at_utc" },
+                columns: new[] { "id", "category", "cook_minutes", "created_at_utc", "description", "ingredients", "instructions", "prep_minutes", "servings", "source", "title", "updated_at_utc" },
                 values: new object[] { 1, "Breakfast", 15, new DateTime(2026, 5, 5, 0, 0, 0, 0, DateTimeKind.Utc), "A simple family breakfast recipe.", "2 eggs\n200 ml milk\n150 g flour\n1 tsp baking powder\n1 pinch salt\nButter for frying", "Whisk eggs and milk.\nMix dry ingredients, then combine with wet ingredients.\nCook in a buttered pan until golden on both sides.", 10, 4, "Family recipe", "Pancakes", new DateTime(2026, 5, 5, 0, 0, 0, 0, DateTimeKind.Utc) });
         }
 
