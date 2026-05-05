@@ -23,6 +23,12 @@
       "title": "Baseline recipe browser UI",
       "status": "done",
       "spec": ".ai/features/004-baseline-recipe-browser-ui.md"
+    },
+    {
+      "id": "005-split-frontend-and-add-recipe-url-state",
+      "title": "Split frontend and add recipe URL state",
+      "status": "done",
+      "spec": ".ai/features/005-split-frontend-and-add-recipe-url-state.md"
     }
   ],
   "decisions": []

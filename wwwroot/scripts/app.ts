@@ -1,261 +1,106 @@
-type Recipe = {
-    id: number;
-    title: string;
-    description: string | null;
-    ingredients: string;
-    instructions: string;
-    category: string | null;
-    servings: number | null;
-    prepMinutes: number | null;
-    cookMinutes: number | null;
-    source: string | null;
-};
+import { fetchRecipes } from "./api.js";
+import { getAppElements } from "./dom.js";
+import { matchesSearch } from "./filters.js";
+import { renderRecipeDetail } from "./renderDetail.js";
+import { renderRecipeGroups } from "./renderList.js";
+import { clearRecipeHash, onHashChange, readSelectedRecipeId, writeRecipeHash } from "./router.js";
+import type { Recipe } from "./types.js";
 
-const statusElement = document.getElementById("status");
-const searchInputElement = document.getElementById("search-input") as HTMLInputElement | null;
-const emptyStateElement = document.getElementById("empty-state");
-const recipeGroupsElement = document.getElementById("recipe-groups");
-const recipeListViewElement = document.getElementById("recipe-list-view");
-const recipeDetailViewElement = document.getElementById("recipe-detail-view");
-const recipeDetailElement = document.getElementById("recipe-detail");
-const backButtonElement = document.getElementById("back-button");
+const appElements = getAppElements();
+
+if (!appElements) {
+    throw new Error("Missing required DOM elements.");
+}
+const elements = appElements;
 
 let allRecipes: Recipe[] = [];
-let selectedRecipeId: number | null = null;
 let currentSearchQuery = "";
 
-function normalizeCategory(category: string | null): string {
-    return category?.trim() || "Uncategorized";
-}
+function renderListState(statusOverride?: string): void {
+    const filteredRecipes = allRecipes.filter((recipe) => matchesSearch(recipe, currentSearchQuery));
 
-function totalTimeText(recipe: Recipe): string | null {
-    const total = (recipe.prepMinutes ?? 0) + (recipe.cookMinutes ?? 0);
-    return total > 0 ? `${total} min total` : null;
-}
-
-function matchesSearch(recipe: Recipe, searchQuery: string): boolean {
-    const normalizedQuery = searchQuery.trim().toLowerCase();
-
-    if (normalizedQuery.length === 0) {
-        return true;
-    }
-
-    const searchableFields = [
-        recipe.title,
-        recipe.description ?? "",
-        recipe.category ?? "",
-        recipe.ingredients,
-        recipe.instructions,
-        recipe.source ?? ""
-    ];
-
-    return searchableFields.some((field) => field.toLowerCase().includes(normalizedQuery));
-}
-
-function sortedCategoryKeys(categoryMap: Map<string, Recipe[]>): string[] {
-    const categories = [...categoryMap.keys()].sort((left, right) => left.localeCompare(right));
-    const uncategorizedIndex = categories.indexOf("Uncategorized");
-
-    if (uncategorizedIndex >= 0) {
-        categories.splice(uncategorizedIndex, 1);
-        categories.push("Uncategorized");
-    }
-
-    return categories;
-}
-
-function renderRecipeListItem(recipe: Recipe): HTMLLIElement {
-    const listItem = document.createElement("li");
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "recipe-button";
-    button.addEventListener("click", () => {
-        selectedRecipeId = recipe.id;
-        renderApp();
+    renderRecipeGroups({
+        container: elements.recipeGroups,
+        recipes: filteredRecipes,
+        onSelectRecipe: (recipeId) => writeRecipeHash(recipeId)
     });
 
-    const title = document.createElement("p");
-    title.className = "recipe-title";
-    title.textContent = recipe.title;
-
-    button.appendChild(title);
-
-    listItem.appendChild(button);
-    return listItem;
-}
-
-function appendMultilineText(parent: HTMLElement, text: string): void {
-    const lines = text.split("\n").map((line) => line.trim()).filter((line) => line.length > 0);
-
-    for (const line of lines) {
-        const lineElement = document.createElement("p");
-        lineElement.className = "text-block-line";
-        lineElement.textContent = line;
-        parent.appendChild(lineElement);
-    }
-}
-
-function renderRecipeDetail(recipe: Recipe): void {
-    if (!recipeDetailElement || !recipeListViewElement || !recipeDetailViewElement || !statusElement || !searchInputElement) {
-        return;
-    }
-
-    recipeDetailElement.replaceChildren();
-
-    const title = document.createElement("h2");
-    title.textContent = recipe.title;
-
-    const meta = document.createElement("p");
-    const metaParts: string[] = [normalizeCategory(recipe.category)];
-
-    if (recipe.servings) {
-        metaParts.push(`${recipe.servings} servings`);
-    }
-    if (recipe.prepMinutes) {
-        metaParts.push(`${recipe.prepMinutes} min prep`);
-    }
-    if (recipe.cookMinutes) {
-        metaParts.push(`${recipe.cookMinutes} min cook`);
-    }
-    meta.textContent = metaParts.join(" · ");
-
-    recipeDetailElement.append(title, meta);
-
-    if (recipe.description) {
-        const description = document.createElement("p");
-        description.textContent = recipe.description;
-        recipeDetailElement.appendChild(description);
-    }
-
-    const ingredientsHeading = document.createElement("h3");
-    ingredientsHeading.textContent = "Ingredients";
-    const ingredientsBlock = document.createElement("div");
-    appendMultilineText(ingredientsBlock, recipe.ingredients);
-
-    const instructionsHeading = document.createElement("h3");
-    instructionsHeading.textContent = "Instructions";
-    const instructionsBlock = document.createElement("div");
-    appendMultilineText(instructionsBlock, recipe.instructions);
-
-    recipeDetailElement.append(ingredientsHeading, ingredientsBlock, instructionsHeading, instructionsBlock);
-
-    if (recipe.source) {
-        const source = document.createElement("p");
-        source.textContent = `Source: ${recipe.source}`;
-        recipeDetailElement.appendChild(source);
-    }
-
-    recipeListViewElement.hidden = true;
-    recipeDetailViewElement.hidden = false;
-    searchInputElement.hidden = true;
-    statusElement.textContent = "";
-}
-
-function renderRecipeGroups(): void {
-    if (!recipeGroupsElement || !emptyStateElement || !statusElement || !recipeListViewElement || !recipeDetailViewElement || !searchInputElement) {
-        return;
-    }
-
-    const filteredRecipes = allRecipes.filter((recipe) => matchesSearch(recipe, currentSearchQuery));
-    recipeGroupsElement.replaceChildren();
-
-    if (filteredRecipes.length === 0) {
-        emptyStateElement.hidden = false;
-        statusElement.textContent = "";
+    if (statusOverride) {
+        elements.emptyState.hidden = filteredRecipes.length !== 0;
+        elements.status.textContent = statusOverride;
+    } else if (filteredRecipes.length === 0) {
+        elements.emptyState.hidden = false;
+        elements.status.textContent = "";
     } else {
-        emptyStateElement.hidden = true;
-        statusElement.textContent = `${filteredRecipes.length} recipe${filteredRecipes.length === 1 ? "" : "s"} found`;
+        elements.emptyState.hidden = true;
+        elements.status.textContent = `${filteredRecipes.length} recipe${filteredRecipes.length === 1 ? "" : "s"} found`;
     }
 
-    const recipesByCategory = new Map<string, Recipe[]>();
-
-    for (const recipe of filteredRecipes) {
-        const category = normalizeCategory(recipe.category);
-        const existing = recipesByCategory.get(category) ?? [];
-        existing.push(recipe);
-        recipesByCategory.set(category, existing);
-    }
-
-    for (const category of sortedCategoryKeys(recipesByCategory)) {
-        const categorySection = document.createElement("section");
-        categorySection.className = "category-section";
-
-        const heading = document.createElement("h2");
-        heading.textContent = category;
-
-        const list = document.createElement("ul");
-        list.className = "recipe-list";
-
-        const recipes = recipesByCategory.get(category) ?? [];
-        recipes.sort((left, right) => left.title.localeCompare(right.title));
-
-        for (const recipe of recipes) {
-            list.appendChild(renderRecipeListItem(recipe));
-        }
-
-        categorySection.append(heading, list);
-        recipeGroupsElement.appendChild(categorySection);
-    }
-
-    recipeListViewElement.hidden = false;
-    recipeDetailViewElement.hidden = true;
-    searchInputElement.hidden = false;
+    elements.recipeListView.hidden = false;
+    elements.recipeDetailView.hidden = true;
+    elements.searchInput.hidden = false;
 }
 
-function renderApp(): void {
+function renderDetailState(recipe: Recipe): void {
+    renderRecipeDetail(elements.recipeDetail, recipe);
+    elements.recipeListView.hidden = true;
+    elements.recipeDetailView.hidden = false;
+    elements.searchInput.hidden = true;
+    elements.status.textContent = "";
+}
+
+function renderFromHash(): void {
+    const selectedRecipeId = readSelectedRecipeId();
+
     if (selectedRecipeId === null) {
-        renderRecipeGroups();
+        renderListState();
         return;
     }
 
     const selectedRecipe = allRecipes.find((recipe) => recipe.id === selectedRecipeId);
+
     if (!selectedRecipe) {
-        selectedRecipeId = null;
-        renderRecipeGroups();
+        renderListState("Recipe not found.");
         return;
     }
 
-    renderRecipeDetail(selectedRecipe);
+    renderDetailState(selectedRecipe);
 }
 
 async function loadRecipes(): Promise<void> {
-    if (!statusElement || !searchInputElement || !backButtonElement) {
-        return;
-    }
-
-    statusElement.textContent = "Loading recipes...";
+    elements.status.textContent = "Loading recipes...";
 
     try {
-        const response = await fetch("/api/recipes");
-
-        if (!response.ok) {
-            throw new Error(`Request failed: ${response.status}`);
-        }
-
-        allRecipes = await response.json();
-        selectedRecipeId = null;
+        allRecipes = await fetchRecipes();
         currentSearchQuery = "";
-        searchInputElement.value = "";
+        elements.searchInput.value = "";
 
         if (allRecipes.length === 0) {
-            statusElement.textContent = "No recipes found.";
+            elements.status.textContent = "No recipes found.";
             return;
         }
 
-        searchInputElement.addEventListener("input", () => {
-            currentSearchQuery = searchInputElement.value;
-            selectedRecipeId = null;
-            renderApp();
+        elements.searchInput.addEventListener("input", () => {
+            currentSearchQuery = elements.searchInput.value;
+            if (readSelectedRecipeId() !== null) {
+                clearRecipeHash();
+                return;
+            }
+
+            renderListState();
         });
 
-        backButtonElement.addEventListener("click", () => {
-            selectedRecipeId = null;
-            renderApp();
+        elements.backButton.addEventListener("click", () => {
+            clearRecipeHash();
         });
 
-        renderApp();
+        onHashChange(() => {
+            renderFromHash();
+        });
+
+        renderFromHash();
     } catch {
-        statusElement.textContent = "Could not load recipes.";
+        elements.status.textContent = "Could not load recipes.";
     }
 }
 
