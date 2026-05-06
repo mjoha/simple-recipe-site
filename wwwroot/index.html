@@ -11,16 +11,10 @@
         <h1>Recipes</h1>
         <input id="search-input" type="search" placeholder="Search recipes..." autocomplete="off">
         <p id="status" aria-live="polite"></p>
+        <nav id="letter-index" aria-label="Recipe index letters"></nav>
         <section id="recipe-list-view">
             <p id="empty-state" hidden>No recipes match your search.</p>
             <div id="recipe-groups"></div>
-        </section>
-        <section id="recipe-detail-view" hidden>
-            <button id="back-button" type="button" class="back-link">
-                <span aria-hidden="true">←</span>
-                <span>Back</span>
-            </button>
-            <article id="recipe-detail"></article>
         </section>
     </main>
     <script type="module" src="/scripts/app.js"></script>

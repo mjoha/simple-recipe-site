@@ -1,7 +1,19 @@
 import type { Recipe } from "./types.js";
 
-export function normalizeCategory(category: string | null): string {
-    return category?.trim() || "Uncategorized";
+export function getRecipeInitial(recipe: Recipe): string {
+    const trimmedTitle = recipe.title.trim();
+
+    if (trimmedTitle.length === 0) {
+        return "#";
+    }
+
+    const firstChar = trimmedTitle[0].toUpperCase();
+
+    if (/^[\p{L}\p{N}]$/u.test(firstChar)) {
+        return firstChar;
+    }
+
+    return "#";
 }
 
 export function matchesSearch(recipe: Recipe, searchQuery: string): boolean {
@@ -23,14 +35,27 @@ export function matchesSearch(recipe: Recipe, searchQuery: string): boolean {
     return searchableFields.some((field) => field.toLowerCase().includes(normalizedQuery));
 }
 
-export function sortedCategoryKeys(categoryMap: Map<string, Recipe[]>): string[] {
-    const categories = [...categoryMap.keys()].sort((left, right) => left.localeCompare(right));
-    const uncategorizedIndex = categories.indexOf("Uncategorized");
+export function groupRecipesByInitial(recipes: Recipe[]): Map<string, Recipe[]> {
+    const recipesByInitial = new Map<string, Recipe[]>();
 
-    if (uncategorizedIndex >= 0) {
-        categories.splice(uncategorizedIndex, 1);
-        categories.push("Uncategorized");
+    for (const recipe of recipes) {
+        const initial = getRecipeInitial(recipe);
+        const existing = recipesByInitial.get(initial) ?? [];
+        existing.push(recipe);
+        recipesByInitial.set(initial, existing);
     }
 
-    return categories;
+    return recipesByInitial;
+}
+
+export function sortedInitialKeys(groups: Map<string, Recipe[]>): string[] {
+    const initials = [...groups.keys()].sort((left, right) => left.localeCompare(right));
+    const symbolIndex = initials.indexOf("#");
+
+    if (symbolIndex >= 0) {
+        initials.splice(symbolIndex, 1);
+        initials.push("#");
+    }
+
+    return initials;
 }

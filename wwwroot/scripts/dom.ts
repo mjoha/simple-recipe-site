@@ -2,32 +2,26 @@ export type AppElements = {
     status: HTMLParagraphElement;
     searchInput: HTMLInputElement;
     emptyState: HTMLParagraphElement;
+    letterIndex: HTMLElement;
     recipeGroups: HTMLDivElement;
     recipeListView: HTMLElement;
-    recipeDetailView: HTMLElement;
-    recipeDetail: HTMLElement;
-    backButton: HTMLButtonElement;
 };
 
 export function getAppElements(): AppElements | null {
     const status = document.getElementById("status");
     const searchInput = document.getElementById("search-input");
     const emptyState = document.getElementById("empty-state");
+    const letterIndex = document.getElementById("letter-index");
     const recipeGroups = document.getElementById("recipe-groups");
     const recipeListView = document.getElementById("recipe-list-view");
-    const recipeDetailView = document.getElementById("recipe-detail-view");
-    const recipeDetail = document.getElementById("recipe-detail");
-    const backButton = document.getElementById("back-button");
 
     if (
         !(status instanceof HTMLParagraphElement) ||
         !(searchInput instanceof HTMLInputElement) ||
         !(emptyState instanceof HTMLParagraphElement) ||
+        !(letterIndex instanceof HTMLElement) ||
         !(recipeGroups instanceof HTMLDivElement) ||
-        !(recipeListView instanceof HTMLElement) ||
-        !(recipeDetailView instanceof HTMLElement) ||
-        !(recipeDetail instanceof HTMLElement) ||
-        !(backButton instanceof HTMLButtonElement)
+        !(recipeListView instanceof HTMLElement)
     ) {
         return null;
     }
@@ -36,10 +30,8 @@ export function getAppElements(): AppElements | null {
         status,
         searchInput,
         emptyState,
+        letterIndex,
         recipeGroups,
-        recipeListView,
-        recipeDetailView,
-        recipeDetail,
-        backButton
+        recipeListView
     };
 }

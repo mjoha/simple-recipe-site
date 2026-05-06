@@ -60,7 +60,9 @@ feat: add recipe list UI
 
 ### 5. Verify
 
-- Run the app locally.
+- Use `npm run verify` for short-lived agent validation.
+- Use `npm run dev` only for interactive long-running local development.
+- Agents should not kill unrelated processes. If the app port is already in use, report it and ask the user to stop the existing dev server.
 - Test API endpoints with `.http` files, `curl`, or browser requests.
 - Verify frontend behavior in the browser.
 - Run relevant build/test commands before finishing work.
@@ -78,21 +80,23 @@ feat: add recipe list UI
 
 ## Local Development
 
-Typical local workflow:
+Human interactive workflow:
 
 ```bash
 docker compose up -d
-dotnet run
+npm run dev
 ```
 
-For TypeScript:
+Agent/local smoke-test workflow:
+
+```bash
+npm run verify
+```
+
+`npm run verify` owns the app process it starts and cleans it up when finished. It should fail rather than killing unknown processes if the configured app port is already in use.
+
+For one-off TypeScript builds:
 
 ```bash
 npm run build
-```
-
-or:
-
-```bash
-npm run watch
 ```

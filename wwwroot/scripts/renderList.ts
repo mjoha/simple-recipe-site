@@ -1,18 +1,27 @@
-import { normalizeCategory, sortedCategoryKeys } from "./filters.js";
+import { groupRecipesByInitial, sortedInitialKeys } from "./filters.js";
+import { renderInlineRecipeDetail } from "./renderDetail.js";
 import type { Recipe } from "./types.js";
 
 type RenderListArgs = {
     container: HTMLElement;
+    letterIndex: HTMLElement;
     recipes: Recipe[];
-    onSelectRecipe: (recipeId: number) => void;
+    expandedRecipeId: number | null;
+    onToggleRecipe: (recipeId: number) => void;
 };
 
-function renderRecipeListItem(recipe: Recipe, onSelectRecipe: (recipeId: number) => void): HTMLLIElement {
+const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+
+function renderRecipeListItem(
+    recipe: Recipe,
+    expandedRecipeId: number | null,
+    onToggleRecipe: (recipeId: number) => void
+): HTMLLIElement {
     const listItem = document.createElement("li");
-    const button = document.createElement("button");
-    button.type = "button";
+    listItem.className = "recipe-list-item";
+    const button = document.createElement("div");
     button.className = "recipe-button";
-    button.addEventListener("click", () => onSelectRecipe(recipe.id));
+    button.addEventListener("click", () => onToggleRecipe(recipe.id));
 
     const title = document.createElement("p");
     title.className = "recipe-title";
@@ -20,38 +29,59 @@ function renderRecipeListItem(recipe: Recipe, onSelectRecipe: (recipeId: number)
 
     button.appendChild(title);
     listItem.appendChild(button);
+
+    if (expandedRecipeId === recipe.id) {
+        listItem.classList.add("recipe-list-item-expanded");
+        renderInlineRecipeDetail(listItem, recipe);
+    }
+
     return listItem;
 }
 
-export function renderRecipeGroups({ container, recipes, onSelectRecipe }: RenderListArgs): void {
+export function renderRecipeGroups({ container, letterIndex, recipes, expandedRecipeId, onToggleRecipe }: RenderListArgs): void {
     container.replaceChildren();
-    const recipesByCategory = new Map<string, Recipe[]>();
+    letterIndex.replaceChildren();
+    const recipesByInitial = groupRecipesByInitial(recipes);
+    const initials = sortedInitialKeys(recipesByInitial);
 
-    for (const recipe of recipes) {
-        const category = normalizeCategory(recipe.category);
-        const existing = recipesByCategory.get(category) ?? [];
-        existing.push(recipe);
-        recipesByCategory.set(category, existing);
+    const availableInitials = new Set(initials);
+
+    for (const letter of ALPHABET) {
+        const letterButton = document.createElement("div");
+        letterButton.className = "letter-index-button";
+        letterButton.textContent = letter;
+
+        if (!availableInitials.has(letter)) {
+            letterButton.style.opacity = "0.45";
+            letterButton.style.cursor = "default";
+        } else {
+            letterButton.addEventListener("click", () => {
+                document.getElementById(`initial-${letter}`)?.scrollIntoView({ block: "start" });
+            });
+        }
+
+        letterIndex.appendChild(letterButton);
     }
 
-    for (const category of sortedCategoryKeys(recipesByCategory)) {
-        const categorySection = document.createElement("section");
-        categorySection.className = "category-section";
+    for (const initial of initials) {
+        const initialSection = document.createElement("section");
+        initialSection.className = "category-section";
+        initialSection.id = `initial-${initial}`;
 
         const heading = document.createElement("h2");
-        heading.textContent = category;
+        heading.textContent = initial;
 
         const list = document.createElement("ul");
         list.className = "recipe-list";
 
-        const categoryRecipes = recipesByCategory.get(category) ?? [];
-        categoryRecipes.sort((left, right) => left.title.localeCompare(right.title));
+        const initialRecipes = recipesByInitial.get(initial) ?? [];
+        initialRecipes.sort((left, right) => left.title.localeCompare(right.title));
 
-        for (const recipe of categoryRecipes) {
-            list.appendChild(renderRecipeListItem(recipe, onSelectRecipe));
+        for (const recipe of initialRecipes) {
+            list.appendChild(renderRecipeListItem(recipe, expandedRecipeId, onToggleRecipe));
         }
 
-        categorySection.append(heading, list);
-        container.appendChild(categorySection);
+        initialSection.append(heading, list);
+        container.appendChild(initialSection);
     }
 }

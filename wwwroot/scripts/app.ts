@@ -1,7 +1,6 @@
 import { fetchRecipes } from "./api.js";
 import { getAppElements } from "./dom.js";
 import { matchesSearch } from "./filters.js";
-import { renderRecipeDetail } from "./renderDetail.js";
 import { renderRecipeGroups } from "./renderList.js";
 import { clearRecipeHash, onHashChange, readSelectedRecipeId, writeRecipeHash } from "./router.js";
 import type { Recipe } from "./types.js";
@@ -16,13 +15,23 @@ const elements = appElements;
 let allRecipes: Recipe[] = [];
 let currentSearchQuery = "";
 
-function renderListState(statusOverride?: string): void {
+function renderIndexState(statusOverride?: string): void {
     const filteredRecipes = allRecipes.filter((recipe) => matchesSearch(recipe, currentSearchQuery));
+    const selectedRecipeId = readSelectedRecipeId();
+    const expandedRecipeId = filteredRecipes.some((recipe) => recipe.id === selectedRecipeId) ? selectedRecipeId : null;
 
     renderRecipeGroups({
         container: elements.recipeGroups,
+        letterIndex: elements.letterIndex,
         recipes: filteredRecipes,
-        onSelectRecipe: (recipeId) => writeRecipeHash(recipeId)
+        expandedRecipeId,
+        onToggleRecipe: (recipeId) => {
+            if (readSelectedRecipeId() === recipeId) {
+                clearRecipeHash();
+                return;
+            }
+            writeRecipeHash(recipeId);
+        }
     });
 
     if (statusOverride) {
@@ -37,34 +46,26 @@ function renderListState(statusOverride?: string): void {
     }
 
     elements.recipeListView.hidden = false;
-    elements.recipeDetailView.hidden = true;
     elements.searchInput.hidden = false;
-}
-
-function renderDetailState(recipe: Recipe): void {
-    renderRecipeDetail(elements.recipeDetail, recipe);
-    elements.recipeListView.hidden = true;
-    elements.recipeDetailView.hidden = false;
-    elements.searchInput.hidden = true;
-    elements.status.textContent = "";
 }
 
 function renderFromHash(): void {
     const selectedRecipeId = readSelectedRecipeId();
 
     if (selectedRecipeId === null) {
-        renderListState();
+        renderIndexState();
         return;
     }
 
     const selectedRecipe = allRecipes.find((recipe) => recipe.id === selectedRecipeId);
 
     if (!selectedRecipe) {
-        renderListState("Recipe not found.");
+        clearRecipeHash();
+        renderIndexState("Recipe not found.");
         return;
     }
 
-    renderDetailState(selectedRecipe);
+    renderIndexState();
 }
 
 async function loadRecipes(): Promise<void> {
@@ -82,16 +83,13 @@ async function loadRecipes(): Promise<void> {
 
         elements.searchInput.addEventListener("input", () => {
             currentSearchQuery = elements.searchInput.value;
-            if (readSelectedRecipeId() !== null) {
+            const selectedRecipeId = readSelectedRecipeId();
+            if (selectedRecipeId !== null && !allRecipes.some((recipe) => recipe.id === selectedRecipeId && matchesSearch(recipe, currentSearchQuery))) {
                 clearRecipeHash();
                 return;
             }
 
-            renderListState();
-        });
-
-        elements.backButton.addEventListener("click", () => {
-            clearRecipeHash();
+            renderIndexState();
         });
 
         onHashChange(() => {

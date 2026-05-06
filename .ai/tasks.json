@@ -29,6 +29,12 @@
       "title": "Split frontend and add recipe URL state",
       "status": "done",
       "spec": ".ai/features/005-split-frontend-and-add-recipe-url-state.md"
+    },
+    {
+      "id": "006-inline-recipe-index",
+      "title": "Inline recipe index",
+      "status": "done",
+      "spec": ".ai/features/006-inline-recipe-index.md"
     }
   ],
   "decisions": []

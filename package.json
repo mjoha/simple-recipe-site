@@ -5,7 +5,8 @@
     "build": "tsc",
     "watch:ts": "tsc -w",
     "watch:dotnet": "dotnet watch run --launch-profile http",
-    "dev": "npm run build && concurrently \"npm:watch:ts\" \"npm:watch:dotnet\""
+    "dev": "npm run build && concurrently \"npm:watch:ts\" \"npm:watch:dotnet\"",
+    "verify": "./scripts/verify-local.sh"
   },
   "devDependencies": {
     "concurrently": "^9.2.1",
