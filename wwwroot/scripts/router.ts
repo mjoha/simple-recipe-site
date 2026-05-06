@@ -10,6 +10,10 @@ export function parseRecipeIdFromHash(hash: string): number | null {
     }
 
     const idPart = hash.slice(RECIPE_HASH_PREFIX.length);
+    if (!/^\d+$/.test(idPart)) {
+        return null;
+    }
+
     const parsed = Number.parseInt(idPart, 10);
 
     if (!Number.isInteger(parsed) || parsed <= 0) {
@@ -23,14 +27,18 @@ export function readSelectedRecipeId(): number | null {
     return parseRecipeIdFromHash(window.location.hash);
 }
 
-export function writeRecipeHash(id: number): void {
-    window.location.hash = `${RECIPE_HASH_PREFIX}${id}`;
+export function writeRecipeUrl(id: number): void {
+    history.pushState({ recipeId: id }, "", `${RECIPE_HASH_PREFIX}${id}`);
 }
 
-export function clearRecipeHash(): void {
-    window.location.hash = "";
+export function clearRecipeUrl(): void {
+    history.pushState({ recipeId: null }, "", `${location.pathname}${location.search}`);
 }
 
-export function onHashChange(handler: () => void): void {
-    window.addEventListener("hashchange", handler);
+export function replaceRecipeUrlWithIndex(): void {
+    history.replaceState({ recipeId: null }, "", `${location.pathname}${location.search}`);
+}
+
+export function onRecipeUrlChange(handler: () => void): void {
+    window.addEventListener("popstate", handler);
 }

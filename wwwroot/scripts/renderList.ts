@@ -6,7 +6,7 @@ type RenderListArgs = {
     container: HTMLElement;
     letterIndex: HTMLElement;
     recipes: Recipe[];
-    expandedRecipeId: number | null;
+    expandedRecipeIds: ReadonlySet<number>;
     onToggleRecipe: (recipeId: number) => void;
 };
 
@@ -14,23 +14,24 @@ const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
 function renderRecipeListItem(
     recipe: Recipe,
-    expandedRecipeId: number | null,
+    expandedRecipeIds: ReadonlySet<number>,
     onToggleRecipe: (recipeId: number) => void
 ): HTMLLIElement {
     const listItem = document.createElement("li");
     listItem.className = "recipe-list-item";
+    listItem.id = `recipe-${recipe.id}`;
     const button = document.createElement("div");
     button.className = "recipe-button";
     button.addEventListener("click", () => onToggleRecipe(recipe.id));
 
-    const title = document.createElement("p");
+    const title = document.createElement("h3");
     title.className = "recipe-title";
     title.textContent = recipe.title;
 
     button.appendChild(title);
     listItem.appendChild(button);
 
-    if (expandedRecipeId === recipe.id) {
+    if (expandedRecipeIds.has(recipe.id)) {
         listItem.classList.add("recipe-list-item-expanded");
         renderInlineRecipeDetail(listItem, recipe);
     }
@@ -38,7 +39,7 @@ function renderRecipeListItem(
     return listItem;
 }
 
-export function renderRecipeGroups({ container, letterIndex, recipes, expandedRecipeId, onToggleRecipe }: RenderListArgs): void {
+export function renderRecipeGroups({ container, letterIndex, recipes, expandedRecipeIds, onToggleRecipe }: RenderListArgs): void {
     container.replaceChildren();
     letterIndex.replaceChildren();
     const recipesByInitial = groupRecipesByInitial(recipes);
@@ -78,7 +79,7 @@ export function renderRecipeGroups({ container, letterIndex, recipes, expandedRe
         initialRecipes.sort((left, right) => left.title.localeCompare(right.title));
 
         for (const recipe of initialRecipes) {
-            list.appendChild(renderRecipeListItem(recipe, expandedRecipeId, onToggleRecipe));
+            list.appendChild(renderRecipeListItem(recipe, expandedRecipeIds, onToggleRecipe));
         }
 
         initialSection.append(heading, list);
