@@ -1,6 +1,22 @@
 [
   {
     "id": 1,
+    "title": "Derp Soup",
+    "slug": "derp-soup",
+    "category": "Soup",
+    "difficulty": "Beginner",
+    "timeEstimate": "35 minutes",
+    "source": "Family notebook",
+    "introduction": "Derp soup should be bright and comforting at the same time, not thin or sugary.",
+    "objective": "A balanced bowl with body, acidity, and warmth.",
+    "ingredients": "Onion, garlic, canned tomatoes, olive oil, stock or water, and salt.",
+    "preparation": "Slice onion and garlic before heating the pot. Keep extra stock nearby to adjust consistency.",
+    "execution": "Cook onion gently in olive oil until soft.\nAdd garlic briefly.\nAdd tomatoes and stock, then simmer until integrated.\nBlend to your preferred texture.\nSeason in small steps.",
+    "reflection": "If flavor feels flat, it usually needs salt first. If still dull, add a little acidity. If sharp, simmer longer.",
+    "variation": "Finish with cream for a softer profile, or chili flakes for heat."
+  },
+  {
+    "id": 2,
     "title": "Scrambled Eggs",
     "slug": "scrambled-eggs",
     "category": "Eggs",
@@ -16,7 +32,7 @@
     "variation": "Better eggs improve everything.\nA spoon of creme fraiche adds extra silk.\nChives and black pepper are optional finishing notes."
   },
   {
-    "id": 2,
+    "id": 3,
     "title": "Tomato Soup",
     "slug": "tomato-soup",
     "category": "Soup",

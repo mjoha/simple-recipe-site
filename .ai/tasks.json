@@ -53,6 +53,12 @@
       "title": "Pivot to static Markdown recipes",
       "status": "done",
       "spec": ".ai/features/009-pivot-to-static-markdown-recipes.md"
+    },
+    {
+      "id": "010-github-pages-deployment",
+      "title": "GitHub Pages deployment",
+      "status": "done",
+      "spec": ".ai/features/010-github-pages-deployment.md"
     }
   ],
   "decisions": []
