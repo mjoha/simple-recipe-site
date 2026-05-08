@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "build": "node scripts/build-site.mjs",
-    "dev": "npm run build && node scripts/serve-wwwroot.mjs",
+    "dev": "npm run build && node scripts/serve-dist.mjs",
     "verify": "./scripts/verify-local.sh"
   }
 }

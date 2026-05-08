@@ -83,6 +83,12 @@
       "title": "Project cleanup and generic docs",
       "status": "done",
       "spec": ".ai/features/014-project-cleanup-and-docs.md"
+    },
+    {
+      "id": "015-restructure-output-and-source-assets",
+      "title": "Restructure output folder and split source from generated assets",
+      "status": "done",
+      "spec": ".ai/features/015-restructure-output-and-source-assets.md"
     }
   ],
   "decisions": []

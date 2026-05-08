@@ -2,10 +2,10 @@
 
 ## Core
 
-- Static site served from `wwwroot`.
+- Static site served from generated `dist/`.
 - Authored Markdown collection config under `content/index.md`.
 - Authored Markdown items under `content/items`.
-- Build-time HTML generation to `wwwroot/index.html`.
+- Build-time HTML generation to `dist/index.html`.
 - Plain HTML and CSS for runtime behavior.
 - No frontend framework by default.
 
@@ -23,7 +23,7 @@ No backend runtime in the current architecture.
 
 ## Frontend
 
-- Static assets served directly from `wwwroot`.
+- Hand-authored static assets live in `src/` and are copied to `dist/` at build time.
 - Use semantic HTML.
 - Use plain CSS.
 - Do not add SCSS.
@@ -38,13 +38,13 @@ No backend runtime in the current architecture.
 - WSL Ubuntu.
 - Project files should stay under `/home/...`, not `/mnt/c/...`.
 - Node/npm for build scripts.
-- Local static dev server for `wwwroot`.
+- Local static dev server for `dist/`.
 
 ---
 
 ## Deployment Direction
 
-- Deploy static files only (`wwwroot` output).
+- Deploy static files only (`dist` output).
 - Treat Markdown config and item files as source of truth and generated HTML as runtime output.
 - Keep deployment compatible with basic static hosts.
 
@@ -55,5 +55,5 @@ No backend runtime in the current architecture.
 - Backend/API runtime.
 - Database persistence.
 - Authentication.
-- Recipe image upload/storage.
+- Media upload/storage.
 - Public/private sharing rules.

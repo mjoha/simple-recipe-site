@@ -6,7 +6,7 @@ Minimal static indexed Markdown site.
 
 - `content/index.md` defines collection configuration.
 - Markdown item files in `content/items` are source content.
-- A build script generates `wwwroot/index.html`.
+- A build script generates `dist/index.html`.
 - Frontend runtime is static HTML and CSS with no client framework.
 - Runtime serves static files only.
 
@@ -24,8 +24,13 @@ Keep structure centered around authored content and static assets:
       *.md
   scripts/
     build-site.mjs
-    serve-wwwroot.mjs
-  wwwroot/
+    serve-dist.mjs
+  src/
+    styles/
+      site.css
+    scripts/
+      search.js
+  dist/
     index.html
     styles/
       site.css
@@ -58,7 +63,7 @@ No runtime API in the current architecture.
 
 ## Frontend Architecture
 
-- Static pages and assets served from `wwwroot`.
+- Static pages and assets served from `dist/`.
 - Use semantic HTML and progressive enhancement.
 - Prefer generated semantic markup and native elements such as `<details>/<summary>`.
 - Avoid runtime JavaScript unless there is a clear user-facing need.
@@ -68,7 +73,7 @@ No runtime API in the current architecture.
 ## Data Format
 
 - Source content lives in Markdown under `content/`.
-- Runtime output is generated `wwwroot/index.html`.
+- Runtime output is generated `dist/index.html`.
 
 ---
 

@@ -6,7 +6,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const repoRoot = path.resolve(__dirname, "..");
 const indexConfigPath = path.join(repoRoot, "content", "index.md");
-const outputHtmlPath = path.join(repoRoot, "wwwroot", "index.html");
+const distDirectory = path.join(repoRoot, "dist");
+const outputHtmlPath = path.join(distDirectory, "index.html");
+const sourceStylesPath = path.join(repoRoot, "src", "styles", "site.css");
+const sourceSearchScriptPath = path.join(repoRoot, "src", "scripts", "search.js");
+const outputStylesPath = path.join(distDirectory, "styles", "site.css");
+const outputSearchScriptPath = path.join(distDirectory, "scripts", "search.js");
 
 function parseFrontmatter(markdown, filePath) {
     if (!markdown.startsWith("---\n")) {
@@ -312,6 +317,10 @@ ${groupsMarkup}
 `;
 
     await fs.mkdir(path.dirname(outputHtmlPath), { recursive: true });
+    await fs.mkdir(path.dirname(outputStylesPath), { recursive: true });
+    await fs.mkdir(path.dirname(outputSearchScriptPath), { recursive: true });
+    await fs.copyFile(sourceStylesPath, outputStylesPath);
+    await fs.copyFile(sourceSearchScriptPath, outputSearchScriptPath);
     await fs.writeFile(outputHtmlPath, html, "utf-8");
     console.log(`Wrote static catalog HTML to ${outputHtmlPath}`);
 }

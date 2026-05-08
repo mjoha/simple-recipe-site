@@ -32,7 +32,7 @@ Current architecture has no runtime API.
 Current architecture has no runtime database.
 
 - Markdown config/item files in `content/` are source of truth.
-- Generated HTML in `wwwroot/index.html` is runtime output.
+- Generated HTML in `dist/index.html` is runtime output.
 - Do not add database dependencies unless explicitly required by a future feature.
 
 ---
@@ -51,7 +51,7 @@ Current architecture has no runtime database.
 ## Naming
 
 - Markdown content/config files: simple lowercase names such as `index.md`, `items/*.md`.
-- Build scripts: explicit lowercase names such as `build-site.mjs`, `serve-wwwroot.mjs`.
+- Build scripts: explicit lowercase names such as `build-site.mjs`, `serve-dist.mjs`.
 - Frontend assets: simple lowercase names such as `site.css`, `index.html`.
 
 ---

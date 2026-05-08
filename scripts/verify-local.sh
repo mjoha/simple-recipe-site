@@ -2,7 +2,7 @@
 set -euo pipefail
 
 app_url="${APP_URL:-http://localhost:5002}"
-log_file="${TMPDIR:-/tmp}/simple-recipe-site-verify.log"
+log_file="${TMPDIR:-/tmp}/static-markdown-catalog-verify.log"
 
 if curl -fsS --max-time 2 "${app_url}/" >/dev/null 2>&1; then
   echo "Refusing to run verification because ${app_url} is already responding."
@@ -12,21 +12,7 @@ fi
 
 npm run build
 
-index_was_dirty_before_build=false
-if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-  if ! git diff --quiet -- "wwwroot/index.html"; then
-    index_was_dirty_before_build=true
-  fi
-fi
-
-if git rev-parse --is-inside-work-tree >/dev/null 2>&1 && [ "${index_was_dirty_before_build}" = false ]; then
-  if ! git diff --quiet -- "wwwroot/index.html"; then
-    echo "Generated output drift detected in wwwroot/index.html. Run npm run build and commit the result."
-    exit 1
-  fi
-fi
-
-node ./scripts/serve-wwwroot.mjs >"${log_file}" 2>&1 &
+node ./scripts/serve-dist.mjs >"${log_file}" 2>&1 &
 app_pid=$!
 
 cleanup() {
@@ -38,23 +24,23 @@ trap cleanup EXIT
 for _ in {1..30}; do
   if curl -fsS --max-time 2 "${app_url}/" >/dev/null 2>&1; then
     curl -fsS --max-time 2 "${app_url}/" >/dev/null
-    if ! [ -f "wwwroot/index.html" ]; then
+    if ! [ -f "dist/index.html" ]; then
       echo "Generated index.html is missing."
       exit 1
     fi
-    if ! node -e 'const fs=require("node:fs");const html=fs.readFileSync("wwwroot/index.html","utf8");if(!html.includes("<details")||!html.includes("id=\"search-input\"")||html.includes("id=\"status\"")){process.exit(1);}'; then
+    if ! node -e 'const fs=require("node:fs");const html=fs.readFileSync("dist/index.html","utf8");if(!html.includes("<details")||!html.includes("id=\"search-input\"")||html.includes("id=\"status\"")){process.exit(1);}'; then
       echo "Generated index.html does not contain expected catalog markup."
       exit 1
     fi
-    if ! node -e 'const fs=require("node:fs");const html=fs.readFileSync("wwwroot/index.html","utf8");const count=(html.match(/data-letter=\"[A-Z]\"/g)||[]).length;if(count!==26){process.exit(1);}'; then
+    if ! node -e 'const fs=require("node:fs");const html=fs.readFileSync("dist/index.html","utf8");const count=(html.match(/data-letter=\"[A-Z]\"/g)||[]).length;if(count!==26){process.exit(1);}'; then
       echo "Generated index.html does not contain full A-Z letter navigation."
       exit 1
     fi
-    if ! [ -f "wwwroot/styles/site.css" ]; then
+    if ! [ -f "dist/styles/site.css" ]; then
       echo "Site stylesheet is missing."
       exit 1
     fi
-    if ! [ -f "wwwroot/scripts/search.js" ]; then
+    if ! [ -f "dist/scripts/search.js" ]; then
       echo "Search enhancement script is missing."
       exit 1
     fi

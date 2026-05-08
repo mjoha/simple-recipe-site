@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const repoRoot = path.resolve(__dirname, "..");
-const rootDirectory = path.join(repoRoot, "wwwroot");
+const rootDirectory = path.join(repoRoot, "dist");
 const port = Number.parseInt(process.env.PORT ?? "5002", 10);
 
 const contentTypes = new Map([

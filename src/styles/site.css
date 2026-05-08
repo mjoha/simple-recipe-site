@@ -193,7 +193,7 @@ input[type="search"]:focus-visible {
     margin: var(--space-4) 0 var(--space-2);
     font: 600 0.95rem/1.2 var(--font-sans);
     letter-spacing: 0.03em;
-   
+
     color: var(--color-muted);
 }
 

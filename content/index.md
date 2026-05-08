@@ -3,7 +3,7 @@ title: Animal Field Guide
 itemName: Animal
 itemNamePlural: Animals
 source: content/items
-output: wwwroot/index.html
+output: dist/index.html
 titleField: title
 slugField: slug
 requiredFields: title, slug, habitat, behavior

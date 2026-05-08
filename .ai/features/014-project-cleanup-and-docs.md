@@ -2,9 +2,9 @@
 
 ## Goal
 
-Clean up the project after the pivots to a generic static Markdown catalog generator.
+Clean up the project after pivots to a generic static Markdown catalog generator.
 
-The current implementation has moved beyond the original recipe/.NET/TypeScript architecture, but some docs, names, examples, and historical feature specs still point at older directions. This feature should make the repository easier for future agents and humans to understand.
+The current implementation has moved beyond the original domain-specific/.NET/TypeScript architecture, but some docs, names, examples, and historical feature specs still point at older directions. This feature should make the repository easier for future agents and humans to understand.
 
 ---
 
@@ -15,7 +15,7 @@ The current implementation has moved beyond the original recipe/.NET/TypeScript 
 - Archive obsolete historical feature specs.
 - Make user-facing docs generic.
 - Make project/package naming generic.
-- Remove recipe-specific language from current `.ai` docs.
+- Remove domain-specific language from current `.ai` docs.
 - Update process examples to match the static catalog architecture.
 - Remove stale config fields that no longer apply.
 - Add or improve generated-output drift checks.
@@ -51,7 +51,7 @@ Suggested structure:
 Archive specs that describe old architecture or old product pivots, especially:
 
 - .NET/API/PostgreSQL features
-- recipe-specific UI/model features that no longer represent the current generic catalog direction
+- domain-specific UI/model features that no longer represent the current generic catalog direction
 - TypeScript runtime rendering features
 
 Keep current or recently relevant static catalog specs active if useful.
@@ -64,7 +64,7 @@ Update `.ai/tasks.json` so archived specs point to their new paths or are clearl
 
 ## Generic Naming Cleanup
 
-Replace obvious recipe-specific naming in user-facing project files.
+Replace obvious legacy domain-specific naming in user-facing project files.
 
 Update:
 
@@ -79,13 +79,13 @@ Update:
 
 Examples:
 
-- `Simple Recipe Site` -> current repo/product name.
+- `Simple Legacy Site` -> current repo/product name.
 - `simple-recipe-site` package name -> current repo/package name.
-- `recipe` examples -> `catalog`, `item`, `entry`, or `static site` examples.
-- `feat: add recipe endpoint` -> `feat: add catalog section` or `feat: update static catalog`.
-- `feat: add recipe list UI` -> `feat: improve catalog index`.
+- legacy domain examples -> `catalog`, `item`, `entry`, or `static site` examples.
+- `feat: add item endpoint` -> `feat: add catalog section` or `feat: update static catalog`.
+- `feat: add item list UI` -> `feat: improve catalog index`.
 
-Do not rename content entries merely because they are recipes. Recipes are valid example content. The tool/project should be generic.
+Do not rename content entries merely because they are examples from an earlier domain. Existing examples are valid content. The tool/project should be generic.
 
 ---
 
@@ -102,15 +102,15 @@ It should explain:
 - source content lives in Markdown
 - generated HTML is the runtime output
 - the layout is title + search + alphabetical navigation + expandable entries
-- the product is not recipe-specific
+- the product is not domain-specific
 - the product is not a CMS
 - the product prioritizes simplicity and static hosting
 
 Remove or rewrite stale sections like:
 
-- `Search recipes`
-- `Add or edit recipes`
-- `Initial Recipe Data`
+- `Search items`
+- `Add or edit entries`
+- `Initial Sample Data`
 - `No frontend framework unless app outgrows vanilla TypeScript`
 
 ---
@@ -128,7 +128,7 @@ It should emphasize:
 - keeping browser JS tiny and optional
 - avoiding backend/database unless explicitly requested
 
-Remove stale commit examples and workflow text that references backend endpoints or recipe UI.
+Remove stale commit examples and workflow text that references backend endpoints or item-specific UI.
 
 ---
 
@@ -160,15 +160,15 @@ Remove or update fields that no longer apply to generated HTML output.
 For example:
 
 ```text
-output: wwwroot/data/index.json
+output: dist/data/index.json
 ```
 
-This is stale if the primary generated output is now `wwwroot/index.html`.
+This is stale if the primary generated output is now `dist/index.html`.
 
 Either remove it or change it to something accurate such as:
 
 ```text
-output: wwwroot/index.html
+output: dist/index.html
 ```
 
 Only keep config fields that are actually read by `scripts/build-site.mjs` or clearly documented as future-facing.
@@ -184,7 +184,7 @@ After `npm run build`, verification should fail if generated files differ from c
 Suggested check:
 
 ```bash
-git diff --exit-code -- wwwroot/index.html
+git diff --exit-code -- dist/index.html
 ```
 
 If `search.js` or CSS are generated in the future, include them too.
@@ -198,9 +198,9 @@ Do not make this check fail in contexts where there is no Git checkout, unless t
 Ensure `.github/workflows/deploy-pages.yml` matches current conventions:
 
 - builds static HTML
-- commits generated `wwwroot/index.html` back to `main` if changed
-- deploys `wwwroot`
-- does not mention generated recipe JSON
+- commits generated `dist/index.html` back to `main` if changed
+- deploys `dist`
+- does not mention generated item JSON
 - does not mention TypeScript
 - does not mention backend/database
 
@@ -214,10 +214,10 @@ After implementation, verify:
 
 - `npm run build` succeeds.
 - `npm run verify` succeeds, or clearly reports if a local dev server is already running.
-- `README.md` no longer says `Simple Recipe Site`.
+- `README.md` no longer says the old product name.
 - `package.json` no longer says `simple-recipe-site`.
-- `.ai/product.md` no longer describes recipes as the product.
-- `.ai/process.md` no longer uses backend/recipe endpoint examples.
+- `.ai/product.md` no longer describes a single domain as the product.
+- `.ai/process.md` no longer uses backend/domain endpoint examples.
 - Active `.ai/features/` specs do not primarily describe obsolete .NET/PostgreSQL architecture.
 - Archived specs remain available for history.
 
@@ -228,7 +228,7 @@ After implementation, verify:
 - Current docs describe a generic static Markdown catalog generator.
 - Obsolete feature specs are archived or clearly separated from active specs.
 - User-facing project naming is generic and current.
-- Stale recipe/backend/TypeScript language is removed from current `.ai` docs.
+- Stale domain/backend/TypeScript language is removed from current `.ai` docs.
 - Stale generated JSON config is removed or corrected.
 - Generated HTML drift is caught by verification.
 - No runtime behavior changes are introduced.

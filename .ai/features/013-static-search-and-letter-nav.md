@@ -23,7 +23,7 @@ As a reader, I can:
 
 ### Include
 
-- Add a search input to the generated `wwwroot/index.html`.
+- Add a search input to the generated `dist/index.html`.
 - Add a tiny plain JavaScript search enhancement.
 - Generate searchable data attributes on item elements.
 - Filter generated item elements client-side.
@@ -57,7 +57,7 @@ As a reader, I can:
 Add one small JavaScript file, for example:
 
 ```text
-wwwroot/scripts/search.js
+src/scripts/search.js
 ```
 
 Requirements:
@@ -198,8 +198,8 @@ After implementation, verify:
 
 - `npm run build` succeeds.
 - `npm run verify` succeeds.
-- generated `wwwroot/index.html` contains the search input.
-- generated `wwwroot/index.html` does not contain the persistent item count/status line.
+- generated `dist/index.html` contains the search input.
+- generated `dist/index.html` does not contain the persistent item count/status line.
 - generated letter nav contains all A-Z letters.
 - unavailable letters are disabled/grey.
 - search filters visible items.

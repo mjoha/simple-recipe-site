@@ -20,8 +20,9 @@ Local site: `http://localhost:5002/`
 
 - Collection config lives in `content/index.md`.
 - Source item files live in `content/items/*.md`.
-- `npm run build` generates `wwwroot/index.html` from Markdown.
-- Keep source changes in `content/` and `scripts/`; treat `wwwroot/index.html` as generated output.
+- Hand-authored browser assets live in `src/styles/` and `src/scripts/`.
+- `npm run build` generates `dist/index.html` from Markdown and copies assets into `dist/`.
+- Keep source changes in `content/`, `src/`, and `scripts/`; treat `dist/` as generated output.
 
 ## Commands
 
@@ -36,17 +37,16 @@ Local site: `http://localhost:5002/`
 - The workflow:
   - runs `npm ci`
   - runs `npm run build`
-  - commits generated `wwwroot/index.html` back to `main` only when changed
-  - deploys `wwwroot` to GitHub Pages
+  - uploads `dist/` as the Pages artifact
+  - deploys `dist/` to GitHub Pages
 
 ### Required Repository Settings
 
 - **Pages source**: set to **GitHub Actions**
-- **Actions permissions**: allow workflow read/write access to repository contents
-- **Branch protection** (if enabled on `main`): allow GitHub Actions to push the generated data commit, otherwise the commit step can fail
+- **Actions permissions**: allow workflow read access and Pages deployment permissions
 
 ## Generated Output Convention
 
-- `wwwroot/index.html` is generated and committed.
+- `dist/` is generated and reproducible from `content/`, `src/`, and `scripts/build-site.mjs`.
 - Runtime is static HTML + CSS with tiny optional browser JavaScript.
 - Use relative asset paths (for example `./styles/site.css`) for GitHub Pages compatibility.
