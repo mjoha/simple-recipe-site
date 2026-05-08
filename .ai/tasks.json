@@ -35,6 +35,12 @@
       "title": "Inline recipe index",
       "status": "done",
       "spec": ".ai/features/006-inline-recipe-index.md"
+    },
+    {
+      "id": "007-typography-and-readability-pass",
+      "title": "Typography and readability pass",
+      "status": "done",
+      "spec": ".ai/features/007-typography-and-readability-pass.md"
     }
   ],
   "decisions": []

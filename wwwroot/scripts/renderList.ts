@@ -20,7 +20,8 @@ function renderRecipeListItem(
     const listItem = document.createElement("li");
     listItem.className = "recipe-list-item";
     listItem.id = `recipe-${recipe.id}`;
-    const button = document.createElement("div");
+    const button = document.createElement("button");
+    button.type = "button";
     button.className = "recipe-button";
     button.addEventListener("click", () => onToggleRecipe(recipe.id));
 
@@ -48,13 +49,13 @@ export function renderRecipeGroups({ container, letterIndex, recipes, expandedRe
     const availableInitials = new Set(initials);
 
     for (const letter of ALPHABET) {
-        const letterButton = document.createElement("div");
+        const letterButton = document.createElement("button");
+        letterButton.type = "button";
         letterButton.className = "letter-index-button";
         letterButton.textContent = letter;
 
         if (!availableInitials.has(letter)) {
-            letterButton.style.opacity = "0.45";
-            letterButton.style.cursor = "default";
+            letterButton.disabled = true;
         } else {
             letterButton.addEventListener("click", () => {
                 document.getElementById(`initial-${letter}`)?.scrollIntoView({ block: "start" });
