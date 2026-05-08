@@ -2,7 +2,7 @@
 
 ## Local Development
 
-1. Build recipes and frontend:
+1. Build static catalog HTML:
 
    ```bash
    npm run build
@@ -15,14 +15,12 @@
    ```
 
 Frontend: `http://localhost:5002/`
-Index data: `http://localhost:5002/data/index.json`
 
 ## Authoring Content
 
 - Collection config lives in `content/index.md`.
 - Source item files live in `content/items/*.md`.
-- Run `npm run build:index` to regenerate `wwwroot/data/index.json`.
-- `npm run build` runs both index generation and TypeScript compilation.
+- `npm run build` generates `wwwroot/index.html` from Markdown.
 
 ## GitHub Pages Deployment
 
@@ -30,9 +28,8 @@ Index data: `http://localhost:5002/data/index.json`
 - Trigger: run manually from the Actions tab (`workflow_dispatch`)
 - The workflow:
   - runs `npm ci`
-  - regenerates `wwwroot/data/index.json`
-  - commits `wwwroot/data/index.json` back to `main` only when changed
   - runs `npm run build`
+  - commits generated `wwwroot/index.html` back to `main` only when changed
   - deploys `wwwroot` to GitHub Pages
 
 ### Required Repository Settings
@@ -40,3 +37,8 @@ Index data: `http://localhost:5002/data/index.json`
 - **Pages source**: set to **GitHub Actions**
 - **Actions permissions**: allow workflow read/write access to repository contents
 - **Branch protection** (if enabled on `main`): allow GitHub Actions to push the generated data commit, otherwise the commit step can fail
+
+## Generated Output Convention
+
+- `wwwroot/index.html` is generated and committed.
+- Runtime is static HTML + CSS (no TypeScript rendering runtime).

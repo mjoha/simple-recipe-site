@@ -32,7 +32,7 @@
 Current product direction has no backend runtime.
 
 - Add or update collection config/content under `content/`.
-- Update index build scripts when schema/authoring rules evolve.
+- Update site build scripts when schema/authoring rules evolve.
 - Avoid introducing backend/database dependencies unless explicitly requested.
 
 Suggested commit style:
@@ -46,9 +46,9 @@ feat: add recipe endpoint
 ### 4. Frontend
 
 - Add semantic HTML and plain CSS.
-- Add TypeScript for browser behavior.
-- Call API endpoints with `fetch`.
-- Keep scripts page-oriented and easy to read.
+- Prefer generated static HTML over runtime rendering.
+- Use native browser behavior before adding JavaScript.
+- Keep any browser JavaScript tiny and optional.
 
 Suggested commit style:
 
@@ -94,7 +94,7 @@ npm run verify
 
 `npm run verify` owns the app process it starts and cleans it up when finished. It should fail rather than killing unknown processes if the configured app port is already in use.
 
-For one-off recipe + TypeScript builds:
+For one-off site builds:
 
 ```bash
 npm run build

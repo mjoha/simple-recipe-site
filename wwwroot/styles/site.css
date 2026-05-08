@@ -93,9 +93,10 @@ input[type="search"]:focus-visible {
     min-width: 2rem;
     text-align: center;
     cursor: pointer;
+    text-decoration: none;
 }
 
-.letter-index-button:hover:not(:disabled) {
+.letter-index-button:hover {
     color: var(--color-accent-hover);
     border-color: var(--color-border);
     background: rgba(107, 83, 51, 0.06);
@@ -104,11 +105,6 @@ input[type="search"]:focus-visible {
 .letter-index-button:focus-visible {
     outline: 2px solid var(--color-focus);
     outline-offset: 2px;
-}
-
-.letter-index-button:disabled {
-    color: var(--color-disabled);
-    cursor: default;
 }
 
 #recipe-groups {
@@ -139,6 +135,13 @@ input[type="search"]:focus-visible {
     border-bottom: 1px solid var(--color-border);
 }
 
+.catalog-item[open] {
+    margin: var(--space-1) 0;
+    padding: var(--space-2) 0;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+}
+
 .recipe-button {
     width: 100%;
     border: 0;
@@ -148,6 +151,11 @@ input[type="search"]:focus-visible {
     text-align: left;
     font: inherit;
     cursor: pointer;
+    list-style: none;
+}
+
+.recipe-button::-webkit-details-marker {
+    display: none;
 }
 
 .recipe-button:hover .recipe-title {

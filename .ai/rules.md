@@ -23,7 +23,6 @@
 
 Current architecture has no runtime API.
 
-- Frontend should fetch generated static data from `/data/index.json`.
 - Do not add controllers/endpoints unless a feature explicitly reintroduces backend runtime.
 
 ---
@@ -33,7 +32,7 @@ Current architecture has no runtime API.
 Current architecture has no runtime database.
 
 - Markdown config/item files in `content/` are source of truth.
-- Generated JSON in `wwwroot/data/index.json` is runtime data.
+- Generated HTML in `wwwroot/index.html` is runtime output.
 - Do not add database dependencies unless explicitly required by a future feature.
 
 ---
@@ -43,18 +42,17 @@ Current architecture has no runtime database.
 - Use semantic HTML.
 - Use plain CSS.
 - Do not add SCSS.
-- Use TypeScript for browser behavior.
-- Keep client-side state minimal and local to the page.
+- Prefer native HTML behavior over runtime JavaScript.
+- Keep browser JavaScript minimal and optional.
 - Avoid frontend frameworks, routers, global state libraries, CSS frameworks, and component libraries for now.
 
 ---
 
 ## Naming
 
-- Controllers: `RecipesController`, `CategoriesController`.
-- API request/response models: `CreateRecipeRequest`, `RecipeResponse`.
-- Domain/data models: clear singular names such as `Recipe`.
-- Frontend files: simple lowercase names such as `site.css`, `app.ts`, `recipes.ts`.
+- Markdown content/config files: simple lowercase names such as `index.md`, `items/*.md`.
+- Build scripts: explicit lowercase names such as `build-site.mjs`, `serve-wwwroot.mjs`.
+- Frontend assets: simple lowercase names such as `site.css`, `index.html`.
 
 ---
 

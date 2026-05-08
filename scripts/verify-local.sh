@@ -2,10 +2,9 @@
 set -euo pipefail
 
 app_url="${APP_URL:-http://localhost:5002}"
-data_url="${app_url}/data/index.json"
 log_file="${TMPDIR:-/tmp}/simple-recipe-site-verify.log"
 
-if curl -fsS --max-time 2 "${app_url}/" >/dev/null 2>&1 || curl -fsS --max-time 2 "${data_url}" >/dev/null 2>&1; then
+if curl -fsS --max-time 2 "${app_url}/" >/dev/null 2>&1; then
   echo "Refusing to run verification because ${app_url} is already responding."
   echo "Stop the existing dev server, then run npm run verify again."
   exit 1
@@ -22,14 +21,18 @@ cleanup() {
 trap cleanup EXIT
 
 for _ in {1..30}; do
-  if curl -fsS --max-time 2 "${data_url}" >/dev/null 2>&1; then
+  if curl -fsS --max-time 2 "${app_url}/" >/dev/null 2>&1; then
     curl -fsS --max-time 2 "${app_url}/" >/dev/null
-    if ! node -e 'const fs=require("node:fs");const data=JSON.parse(fs.readFileSync("wwwroot/data/index.json","utf8"));if(!Array.isArray(data.items)||data.items.length===0){process.exit(1);}'; then
-      echo "Generated index.json is missing entries."
+    if ! [ -f "wwwroot/index.html" ]; then
+      echo "Generated index.html is missing."
       exit 1
     fi
-    if ! [ -f "wwwroot/scripts/app.js" ]; then
-      echo "Compiled frontend assets are missing (expected wwwroot/scripts/app.js)."
+    if ! node -e 'const fs=require("node:fs");const html=fs.readFileSync("wwwroot/index.html","utf8");if(!html.includes("<details")||!html.includes("letter-")){process.exit(1);}'; then
+      echo "Generated index.html does not contain expected catalog markup."
+      exit 1
+    fi
+    if ! [ -f "wwwroot/styles/site.css" ]; then
+      echo "Site stylesheet is missing."
       exit 1
     fi
     echo "Local verification passed."

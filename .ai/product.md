@@ -4,7 +4,7 @@
 
 A minimalistic authored index site that feels like a digital field notebook: simple, personal, warm, and easy to use.
 
-The app should make it easy to preserve, browse, search, and share curated markdown entries without turning into a heavy platform.
+The app should make it easy to preserve, browse, and share curated markdown entries without turning into a heavy platform.
 
 ---
 
@@ -12,7 +12,7 @@ The app should make it easy to preserve, browse, search, and share curated markd
 
 - Keep the experience calm, readable, and uncluttered.
 - Prefer fast pages and simple interactions over feature-heavy UI.
-- Make entries easy to find by title, metadata, and free-text search.
+- Make entries easy to browse and find by title and metadata.
 - Treat authored entries as long-lived content that should remain easy to export or migrate.
 - Add features incrementally only when they support the core indexed reference experience.
 

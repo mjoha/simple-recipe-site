@@ -5,8 +5,8 @@
 - Static site served from `wwwroot`.
 - Authored Markdown collection config under `content/index.md`.
 - Authored Markdown items under `content/items`.
-- Build-time JSON generation to `wwwroot/data/index.json`.
-- Plain HTML, simple CSS, and TypeScript for frontend behavior.
+- Build-time HTML generation to `wwwroot/index.html`.
+- Plain HTML and CSS for runtime behavior.
 - No frontend framework by default.
 
 ---
@@ -27,7 +27,8 @@ No backend runtime in the current architecture.
 - Use semantic HTML.
 - Use plain CSS.
 - Do not add SCSS.
-- Use TypeScript for browser code.
+- Prefer native browser HTML behavior over runtime JavaScript.
+- If search is needed later, use a tiny hand-written JavaScript file without a build step.
 - Avoid React, Vue, Svelte, client-side routers, global state libraries, and component frameworks for now.
 
 ---
@@ -36,7 +37,7 @@ No backend runtime in the current architecture.
 
 - WSL Ubuntu.
 - Project files should stay under `/home/...`, not `/mnt/c/...`.
-- Node/npm for TypeScript tooling and recipe build scripts.
+- Node/npm for build scripts.
 - Local static dev server for `wwwroot`.
 
 ---
@@ -44,7 +45,7 @@ No backend runtime in the current architecture.
 ## Deployment Direction
 
 - Deploy static files only (`wwwroot` output).
-- Treat Markdown config and item files as source of truth and generated JSON as runtime data.
+- Treat Markdown config and item files as source of truth and generated HTML as runtime output.
 - Keep deployment compatible with basic static hosts.
 
 ---

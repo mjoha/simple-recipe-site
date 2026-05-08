@@ -6,8 +6,8 @@ Minimal static indexed Markdown site.
 
 - `content/index.md` defines collection configuration.
 - Markdown item files in `content/items` are source content.
-- A build script generates `wwwroot/data/index.json`.
-- Frontend is plain HTML, CSS, and TypeScript with no client framework.
+- A build script generates `wwwroot/index.html`.
+- Frontend runtime is static HTML and CSS with no client framework.
 - Runtime serves static files only.
 
 ---
@@ -23,16 +23,12 @@ Keep structure centered around authored content and static assets:
     items/
       *.md
   scripts/
-    build-index.mjs
+    build-site.mjs
     serve-wwwroot.mjs
   wwwroot/
-    data/
-      index.json
     index.html
     styles/
       site.css
-    scripts/
-      app.ts
 ```
 
 The exact structure can evolve. Prefer clarity over strict layering.
@@ -50,7 +46,7 @@ Build scripts:
 
 - Parse Markdown frontmatter and known section headings.
 - Validate required fields.
-- Generate deterministic index JSON for runtime.
+- Generate deterministic catalog HTML for runtime.
 
 ---
 
@@ -58,28 +54,21 @@ Build scripts:
 
 No runtime API in the current architecture.
 
-- Frontend fetches `/data/index.json`.
-- Keep routing client-side via URL hash only.
-
 ---
 
 ## Frontend Architecture
 
 - Static pages and assets served from `wwwroot`.
 - Use semantic HTML and progressive enhancement.
-- Keep TypeScript modules small and page-oriented.
-- Use `fetch` to load `/data/index.json`.
-- Avoid client-side routing until there is a strong reason.
+- Prefer generated semantic markup and native elements such as `<details>/<summary>`.
+- Avoid runtime JavaScript unless there is a clear user-facing need.
 
 ---
 
 ## Data Format
 
-Runtime data shape comes from generated index JSON:
-
-- collection metadata (`title`, `itemName`, `itemNamePlural`)
-- field configuration (`titleField`, `slugField`, `searchFields`, `sections`, `metadata`)
-- item entries with deterministic `id`, `fields`, and `sections`
+- Source content lives in Markdown under `content/`.
+- Runtime output is generated `wwwroot/index.html`.
 
 ---
 

@@ -65,6 +65,12 @@
       "title": "Generic indexed Markdown site",
       "status": "done",
       "spec": ".ai/features/011-generic-indexed-markdown-site.md"
+    },
+    {
+      "id": "012-generate-static-html",
+      "title": "Generate static HTML",
+      "status": "done",
+      "spec": ".ai/features/012-generate-static-html.md"
     }
   ],
   "decisions": []

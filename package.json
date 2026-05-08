@@ -2,14 +2,8 @@
   "name": "simple-recipe-site",
   "private": true,
   "scripts": {
-    "build:index": "node scripts/build-index.mjs",
-    "build:recipes": "npm run build:index",
-    "build": "npm run build:index && tsc",
-    "watch:ts": "tsc -w",
+    "build": "node scripts/build-site.mjs",
     "dev": "npm run build && node scripts/serve-wwwroot.mjs",
     "verify": "./scripts/verify-local.sh"
-  },
-  "devDependencies": {
-    "typescript": "^5.8.3"
   }
 }
