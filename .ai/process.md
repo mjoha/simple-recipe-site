@@ -23,7 +23,7 @@
 
 - Keep plans small and tied to user-visible behavior.
 - Update `.ai/tasks.json` when tracking multi-step work.
-- Prefer vertical slices: database/API/frontend together for one small feature.
+- Prefer vertical slices: content format + generator + rendered output together for one small feature.
 
 ---
 
@@ -38,7 +38,7 @@ Current product direction has no backend runtime.
 Suggested commit style:
 
 ```text
-feat: add recipe endpoint
+feat: improve static catalog output
 ```
 
 ---
@@ -53,7 +53,7 @@ feat: add recipe endpoint
 Suggested commit style:
 
 ```text
-feat: add recipe list UI
+feat: improve catalog index UX
 ```
 
 ---

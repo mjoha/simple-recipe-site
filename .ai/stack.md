@@ -16,7 +16,7 @@
 No backend runtime in the current architecture.
 
 - Do not add controllers or API endpoints unless a future feature explicitly reintroduces a backend.
-- Do not add database dependencies for the current authored cookbook direction.
+- Do not add database dependencies for the current static catalog direction.
 - Keep data-generation scripts small and explicit.
 
 ---

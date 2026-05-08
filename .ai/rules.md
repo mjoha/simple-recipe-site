@@ -15,7 +15,7 @@
 - Keep related code close together.
 - Do not create global services or generic infrastructure prematurely.
 - Use feature folders when a feature grows beyond one or two files.
-- Keep `Program.cs` focused on startup, dependency registration, middleware, and endpoint/controller registration.
+- Keep build scripts focused on deterministic content parsing and HTML generation.
 
 ---
 

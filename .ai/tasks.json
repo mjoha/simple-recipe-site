@@ -4,79 +4,85 @@
       "id": "001-baseline-project",
       "title": "Baseline project structure",
       "status": "done",
-      "spec": ".ai/features/001-baseline-project.md"
+      "spec": ".ai/archive/features/001-baseline-project.md"
     },
     {
       "id": "002-postgresql-recipes-read-model",
       "title": "PostgreSQL recipe read model",
       "status": "done",
-      "spec": ".ai/features/002-postgresql-recipes-read-model.md"
+      "spec": ".ai/archive/features/002-postgresql-recipes-read-model.md"
     },
     {
       "id": "003-hardening-recipe-read-slice",
       "title": "Harden recipe read slice",
       "status": "done",
-      "spec": ".ai/features/003-hardening-recipe-read-slice.md"
+      "spec": ".ai/archive/features/003-hardening-recipe-read-slice.md"
     },
     {
       "id": "004-baseline-recipe-browser-ui",
       "title": "Baseline recipe browser UI",
       "status": "done",
-      "spec": ".ai/features/004-baseline-recipe-browser-ui.md"
+      "spec": ".ai/archive/features/004-baseline-recipe-browser-ui.md"
     },
     {
       "id": "005-split-frontend-and-add-recipe-url-state",
       "title": "Split frontend and add recipe URL state",
       "status": "done",
-      "spec": ".ai/features/005-split-frontend-and-add-recipe-url-state.md"
+      "spec": ".ai/archive/features/005-split-frontend-and-add-recipe-url-state.md"
     },
     {
       "id": "006-inline-recipe-index",
       "title": "Inline recipe index",
       "status": "done",
-      "spec": ".ai/features/006-inline-recipe-index.md"
+      "spec": ".ai/archive/features/006-inline-recipe-index.md"
     },
     {
       "id": "007-typography-and-readability-pass",
       "title": "Typography and readability pass",
       "status": "done",
-      "spec": ".ai/features/007-typography-and-readability-pass.md"
+      "spec": ".ai/archive/features/007-typography-and-readability-pass.md"
     },
     {
       "id": "008-editorial-recipe-format",
       "title": "Editorial recipe format",
       "status": "done",
-      "spec": ".ai/features/008-editorial-recipe-format.md"
+      "spec": ".ai/archive/features/008-editorial-recipe-format.md"
     },
     {
       "id": "009-pivot-to-static-markdown-recipes",
       "title": "Pivot to static Markdown recipes",
       "status": "done",
-      "spec": ".ai/features/009-pivot-to-static-markdown-recipes.md"
+      "spec": ".ai/archive/features/009-pivot-to-static-markdown-recipes.md"
     },
     {
       "id": "010-github-pages-deployment",
       "title": "GitHub Pages deployment",
       "status": "done",
-      "spec": ".ai/features/010-github-pages-deployment.md"
+      "spec": ".ai/archive/features/010-github-pages-deployment.md"
     },
     {
       "id": "011-generic-indexed-markdown-site",
       "title": "Generic indexed Markdown site",
       "status": "done",
-      "spec": ".ai/features/011-generic-indexed-markdown-site.md"
+      "spec": ".ai/archive/features/011-generic-indexed-markdown-site.md"
     },
     {
       "id": "012-generate-static-html",
       "title": "Generate static HTML",
       "status": "done",
-      "spec": ".ai/features/012-generate-static-html.md"
+      "spec": ".ai/archive/features/012-generate-static-html.md"
     },
     {
       "id": "013-static-search-and-letter-nav",
       "title": "Static search and full letter navigation",
       "status": "done",
       "spec": ".ai/features/013-static-search-and-letter-nav.md"
+    },
+    {
+      "id": "014-project-cleanup-and-docs",
+      "title": "Project cleanup and generic docs",
+      "status": "done",
+      "spec": ".ai/features/014-project-cleanup-and-docs.md"
     }
   ],
   "decisions": []

@@ -11,6 +11,21 @@ if curl -fsS --max-time 2 "${app_url}/" >/dev/null 2>&1; then
 fi
 
 npm run build
+
+index_was_dirty_before_build=false
+if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  if ! git diff --quiet -- "wwwroot/index.html"; then
+    index_was_dirty_before_build=true
+  fi
+fi
+
+if git rev-parse --is-inside-work-tree >/dev/null 2>&1 && [ "${index_was_dirty_before_build}" = false ]; then
+  if ! git diff --quiet -- "wwwroot/index.html"; then
+    echo "Generated output drift detected in wwwroot/index.html. Run npm run build and commit the result."
+    exit 1
+  fi
+fi
+
 node ./scripts/serve-wwwroot.mjs >"${log_file}" 2>&1 &
 app_pid=$!
 

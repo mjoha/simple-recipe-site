@@ -1,5 +1,5 @@
 {
-  "name": "simple-recipe-site",
+  "name": "static-markdown-catalog",
   "private": true,
   "scripts": {
     "build": "node scripts/build-site.mjs",

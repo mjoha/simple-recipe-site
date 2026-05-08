@@ -2,9 +2,9 @@
 
 ## Vision
 
-A minimalistic authored index site that feels like a digital field notebook: simple, personal, warm, and easy to use.
+A minimalistic static Markdown catalog generator that feels like a digital field notebook: simple, personal, warm, and easy to use.
 
-The app should make it easy to preserve, browse, and share curated markdown entries without turning into a heavy platform.
+The project should make it easy to author, build, browse, and share curated entries without turning into a heavy platform.
 
 ---
 
@@ -12,46 +12,41 @@ The app should make it easy to preserve, browse, and share curated markdown entr
 
 - Keep the experience calm, readable, and uncluttered.
 - Prefer fast pages and simple interactions over feature-heavy UI.
-- Make entries easy to browse and find by title and metadata.
+- Make entries easy to browse and find by title, metadata, and simple in-page search.
 - Treat authored entries as long-lived content that should remain easy to export or migrate.
-- Add features incrementally only when they support the core indexed reference experience.
+- Add features incrementally only when they support the core static catalog experience.
 
 ---
 
 ## Core Flow
 
-Browse index -> open entry -> read/share/save.
+Author Markdown -> build site -> browse index -> open entry -> read/share.
 
 Secondary flows:
 
-- Search recipes.
-- Add or edit recipes.
-- Categorize recipes.
-- Share a recipe link.
+- Filter entries with in-page search.
+- Jump by letter navigation.
+- Share direct links to generated entry anchors.
 
 ---
 
-## Initial Recipe Data
+## Content Model
 
-A recipe should likely include:
+An entry should include:
 
 - Title
-- Short description or family note
-- Ingredients
-- Instructions
-- Category or tags
-- Prep/cook time, if useful
-- Servings, if useful
-- Source or attribution, if useful
+- Slug
+- Optional metadata fields
+- Authored section content
 
-Avoid designing the full data model upfront. Start with the smallest useful recipe shape and evolve it.
+Avoid over-designing schema features early. Keep frontmatter and section rules simple and evolve only with clear usage.
 
 ---
 
 ## Non-Goals For Now
 
-- No user accounts initially unless explicitly needed.
+- No user accounts.
 - No social feed or public discovery.
-- No complex meal planning.
-- No heavy CMS.
-- No frontend framework unless the app genuinely outgrows vanilla TypeScript.
+- No heavy CMS or plugin system.
+- No backend/database runtime.
+- No frontend framework.

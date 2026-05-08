@@ -1,8 +1,8 @@
-# Simple Recipe Site
+# Static Markdown Catalog
 
 ## Local Development
 
-1. Build static catalog HTML:
+1. Build generated catalog HTML:
 
    ```bash
    npm run build
@@ -14,13 +14,20 @@
    npm run dev
    ```
 
-Frontend: `http://localhost:5002/`
+Local site: `http://localhost:5002/`
 
 ## Authoring Content
 
 - Collection config lives in `content/index.md`.
 - Source item files live in `content/items/*.md`.
 - `npm run build` generates `wwwroot/index.html` from Markdown.
+- Keep source changes in `content/` and `scripts/`; treat `wwwroot/index.html` as generated output.
+
+## Commands
+
+- Build once: `npm run build`
+- Serve locally: `npm run dev`
+- Smoke test: `npm run verify`
 
 ## GitHub Pages Deployment
 
@@ -41,4 +48,5 @@ Frontend: `http://localhost:5002/`
 ## Generated Output Convention
 
 - `wwwroot/index.html` is generated and committed.
-- Runtime is static HTML + CSS (no TypeScript rendering runtime).
+- Runtime is static HTML + CSS with tiny optional browser JavaScript.
+- Use relative asset paths (for example `./styles/site.css`) for GitHub Pages compatibility.

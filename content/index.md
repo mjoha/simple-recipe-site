@@ -1,15 +1,15 @@
 ---
-title: Recipes
-itemName: Recipe
-itemNamePlural: Recipes
+title: Animal Field Guide
+itemName: Animal
+itemNamePlural: Animals
 source: content/items
-output: wwwroot/data/index.json
+output: wwwroot/index.html
 titleField: title
 slugField: slug
-requiredFields: title, slug, ingredients, execution
-searchFields: title, introduction, objective, ingredients, preparation, execution, reflection, variation, category, difficulty, timeEstimate, source
-sections: introduction, objective, ingredients, preparation, execution, reflection, variation
-metadata: category, difficulty, timeEstimate, source
+requiredFields: title, slug, habitat, behavior
+searchFields: title, introduction, habitat, diet, behavior, adaptation, conservation, category, lifespan, size, source
+sections: introduction, habitat, diet, behavior, adaptation, conservation
+metadata: category, lifespan, size, source
 ---
 
-An authored index of cooking field-guide entries.
+An authored index of concise wildlife field-guide entries.
