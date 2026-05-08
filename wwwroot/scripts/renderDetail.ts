@@ -19,7 +19,9 @@ export function renderInlineRecipeDetail(container: HTMLElement, recipe: Recipe)
     detail.className = "recipe-inline-detail";
     detail.id = `recipe-expanded-${recipe.id}`;
 
-
+    const title = document.createElement("h3");
+    title.textContent = recipe.title;
+    detail.appendChild(title);
 
     const meta = document.createElement("p");
     const metaParts: string[] = [];
@@ -28,14 +30,11 @@ export function renderInlineRecipeDetail(container: HTMLElement, recipe: Recipe)
         metaParts.push(recipe.category.trim());
     }
 
-    if (recipe.servings) {
-        metaParts.push(`${recipe.servings} servings`);
+    if (recipe.difficulty?.trim()) {
+        metaParts.push(recipe.difficulty.trim());
     }
-    if (recipe.prepMinutes) {
-        metaParts.push(`${recipe.prepMinutes} min prep`);
-    }
-    if (recipe.cookMinutes) {
-        metaParts.push(`${recipe.cookMinutes} min cook`);
+    if (recipe.timeEstimate?.trim()) {
+        metaParts.push(recipe.timeEstimate.trim());
     }
 
     if (metaParts.length > 0) {
@@ -43,12 +42,18 @@ export function renderInlineRecipeDetail(container: HTMLElement, recipe: Recipe)
         detail.append(meta);
     }
 
+    if (recipe.introduction) {
+        const introduction = document.createElement("p");
+        introduction.textContent = recipe.introduction;
+        detail.appendChild(introduction);
+    }
 
-
-    if (recipe.description) {
-        const description = document.createElement("p");
-        description.textContent = recipe.description;
-        detail.appendChild(description);
+    if (recipe.objective) {
+        const objectiveHeading = document.createElement("h4");
+        objectiveHeading.textContent = "Objective";
+        const objectiveText = document.createElement("p");
+        objectiveText.textContent = recipe.objective;
+        detail.append(objectiveHeading, objectiveText);
     }
 
     const ingredientsHeading = document.createElement("h4");
@@ -56,12 +61,41 @@ export function renderInlineRecipeDetail(container: HTMLElement, recipe: Recipe)
     const ingredientsBlock = document.createElement("div");
     appendMultilineText(ingredientsBlock, recipe.ingredients);
 
-    const instructionsHeading = document.createElement("h4");
-    instructionsHeading.textContent = "Instructions";
-    const instructionsBlock = document.createElement("div");
-    appendMultilineText(instructionsBlock, recipe.instructions);
+    let preparationHeading: HTMLElement | null = null;
+    let preparationBlock: HTMLElement | null = null;
+    if (recipe.preparation) {
+        preparationHeading = document.createElement("h4");
+        preparationHeading.textContent = "Preparation";
+        preparationBlock = document.createElement("div");
+        appendMultilineText(preparationBlock, recipe.preparation);
+    }
 
-    detail.append(ingredientsHeading, ingredientsBlock, instructionsHeading, instructionsBlock);
+    const executionHeading = document.createElement("h4");
+    executionHeading.textContent = "Execution";
+    const executionBlock = document.createElement("div");
+    appendMultilineText(executionBlock, recipe.execution);
+
+    detail.append(ingredientsHeading, ingredientsBlock);
+    if (preparationHeading && preparationBlock) {
+        detail.append(preparationHeading, preparationBlock);
+    }
+    detail.append(executionHeading, executionBlock);
+
+    if (recipe.reflection) {
+        const reflectionHeading = document.createElement("h4");
+        reflectionHeading.textContent = "Reflection";
+        const reflectionBlock = document.createElement("div");
+        appendMultilineText(reflectionBlock, recipe.reflection);
+        detail.append(reflectionHeading, reflectionBlock);
+    }
+
+    if (recipe.variation) {
+        const variationHeading = document.createElement("h4");
+        variationHeading.textContent = "Variation";
+        const variationBlock = document.createElement("div");
+        appendMultilineText(variationBlock, recipe.variation);
+        detail.append(variationHeading, variationBlock);
+    }
 
     if (recipe.source) {
         const source = document.createElement("p");

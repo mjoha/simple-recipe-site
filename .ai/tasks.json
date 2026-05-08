@@ -41,6 +41,12 @@
       "title": "Typography and readability pass",
       "status": "done",
       "spec": ".ai/features/007-typography-and-readability-pass.md"
+    },
+    {
+      "id": "008-editorial-recipe-format",
+      "title": "Editorial recipe format",
+      "status": "done",
+      "spec": ".ai/features/008-editorial-recipe-format.md"
     }
   ],
   "decisions": []

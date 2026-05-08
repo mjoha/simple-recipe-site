@@ -14,13 +14,17 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             entity.ToTable("recipes");
             entity.Property(recipe => recipe.Id).HasColumnName("id");
             entity.Property(recipe => recipe.Title).HasColumnName("title");
-            entity.Property(recipe => recipe.Description).HasColumnName("description");
+            entity.Property(recipe => recipe.Slug).HasColumnName("slug");
+            entity.Property(recipe => recipe.Introduction).HasColumnName("introduction");
+            entity.Property(recipe => recipe.Objective).HasColumnName("objective");
             entity.Property(recipe => recipe.Ingredients).HasColumnName("ingredients");
-            entity.Property(recipe => recipe.Instructions).HasColumnName("instructions");
+            entity.Property(recipe => recipe.Preparation).HasColumnName("preparation");
+            entity.Property(recipe => recipe.Execution).HasColumnName("execution");
+            entity.Property(recipe => recipe.Reflection).HasColumnName("reflection");
+            entity.Property(recipe => recipe.Variation).HasColumnName("variation");
             entity.Property(recipe => recipe.Category).HasColumnName("category");
-            entity.Property(recipe => recipe.Servings).HasColumnName("servings");
-            entity.Property(recipe => recipe.PrepMinutes).HasColumnName("prep_minutes");
-            entity.Property(recipe => recipe.CookMinutes).HasColumnName("cook_minutes");
+            entity.Property(recipe => recipe.TimeEstimate).HasColumnName("time_estimate");
+            entity.Property(recipe => recipe.Difficulty).HasColumnName("difficulty");
             entity.Property(recipe => recipe.Source).HasColumnName("source");
             entity.Property(recipe => recipe.CreatedAtUtc).HasColumnName("created_at_utc");
             entity.Property(recipe => recipe.UpdatedAtUtc).HasColumnName("updated_at_utc");
@@ -28,38 +32,82 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             var createdAtUtc = new DateTime(2026, 5, 5, 0, 0, 0, DateTimeKind.Utc);
 
             entity.HasData(
-                new Recipe { Id = 1, Title = "Pancakes", Description = "A simple family breakfast recipe.", Ingredients = "2 eggs\n200 ml milk\n150 g flour\n1 tsp baking powder\n1 pinch salt\nButter for frying", Instructions = "Whisk eggs and milk.\nMix dry ingredients, then combine with wet ingredients.\nCook in a buttered pan until golden on both sides.", Category = "Breakfast", Servings = 4, PrepMinutes = 10, CookMinutes = 15, Source = "Family recipe", CreatedAtUtc = createdAtUtc, UpdatedAtUtc = createdAtUtc },
-                new Recipe { Id = 2, Title = "Oatmeal With Apple", Description = "Warm oats with fruit and cinnamon.", Ingredients = "80 g oats\n400 ml milk\n1 apple\n1 tsp cinnamon", Instructions = "Simmer oats in milk.\nStir in chopped apple and cinnamon.\nServe warm.", Category = "Breakfast", Servings = 2, PrepMinutes = 5, CookMinutes = 10, Source = "Weekday staple", CreatedAtUtc = createdAtUtc, UpdatedAtUtc = createdAtUtc },
-                new Recipe { Id = 3, Title = "Scrambled Eggs", Description = "Soft eggs for a quick start.", Ingredients = "4 eggs\n2 tbsp milk\nSalt\nButter", Instructions = "Whisk eggs with milk.\nCook gently in butter while stirring.\nSeason and serve.", Category = "Breakfast", Servings = 2, PrepMinutes = 5, CookMinutes = 6, Source = "Family basics", CreatedAtUtc = createdAtUtc, UpdatedAtUtc = createdAtUtc },
-                new Recipe { Id = 4, Title = "Yogurt Berry Bowl", Description = "No-cook breakfast bowl.", Ingredients = "300 g yogurt\n1 cup berries\n2 tbsp nuts\n1 tbsp honey", Instructions = "Add yogurt to bowls.\nTop with berries, nuts, and honey.\nServe immediately.", Category = "Breakfast", Servings = 2, PrepMinutes = 5, CookMinutes = null, Source = "Summer breakfast", CreatedAtUtc = createdAtUtc, UpdatedAtUtc = createdAtUtc },
-                new Recipe { Id = 5, Title = "Tomato Soup", Description = "Simple smooth tomato soup.", Ingredients = "1 onion\n2 cloves garlic\n800 g canned tomatoes\n500 ml stock", Instructions = "Saute onion and garlic.\nAdd tomatoes and stock.\nSimmer and blend.", Category = "Soup", Servings = 4, PrepMinutes = 10, CookMinutes = 25, Source = "Weeknight dinner", CreatedAtUtc = createdAtUtc, UpdatedAtUtc = createdAtUtc },
-                new Recipe { Id = 6, Title = "Chicken Noodle Soup", Description = "Comforting broth with noodles.", Ingredients = "1 onion\n2 carrots\n200 g chicken\n1.2 l stock\n120 g noodles", Instructions = "Cook vegetables in pot.\nAdd stock and chicken, simmer.\nShred chicken and add noodles until tender.", Category = "Soup", Servings = 4, PrepMinutes = 15, CookMinutes = 30, Source = "Cold-weather meal", CreatedAtUtc = createdAtUtc, UpdatedAtUtc = createdAtUtc },
-                new Recipe { Id = 7, Title = "Lentil Soup", Description = "Hearty pantry soup.", Ingredients = "1 cup lentils\n1 onion\n2 carrots\n1.2 l stock\n1 tsp cumin", Instructions = "Saute vegetables.\nAdd lentils, stock, and cumin.\nSimmer until lentils are tender.", Category = "Soup", Servings = 4, PrepMinutes = 10, CookMinutes = 35, Source = "Pantry recipe", CreatedAtUtc = createdAtUtc, UpdatedAtUtc = createdAtUtc },
-                new Recipe { Id = 8, Title = "Mushroom Soup", Description = "Creamy mushroom soup without fuss.", Ingredients = "400 g mushrooms\n1 onion\n20 g butter\n500 ml stock\n100 ml cream", Instructions = "Cook onion and mushrooms in butter.\nAdd stock and simmer.\nBlend partly, then stir in cream.", Category = "Soup", Servings = 4, PrepMinutes = 10, CookMinutes = 20, Source = "Family notebook", CreatedAtUtc = createdAtUtc, UpdatedAtUtc = createdAtUtc },
-                new Recipe { Id = 9, Title = "Roast Chicken Tray", Description = "One-tray chicken and vegetables.", Ingredients = "1 whole chicken\n600 g potatoes\n3 carrots\n2 tbsp oil\nSalt and pepper", Instructions = "Season chicken and vegetables.\nRoast until chicken is cooked through.\nRest before serving.", Category = "Dinner", Servings = 4, PrepMinutes = 15, CookMinutes = 75, Source = "Sunday dinner", CreatedAtUtc = createdAtUtc, UpdatedAtUtc = createdAtUtc },
-                new Recipe { Id = 10, Title = "Spaghetti Bolognese", Description = "Classic meat sauce pasta.", Ingredients = "400 g minced beef\n1 onion\n2 garlic cloves\n400 g tomatoes\n300 g spaghetti", Instructions = "Brown beef with onion and garlic.\nAdd tomatoes and simmer.\nCook spaghetti and serve with sauce.", Category = "Dinner", Servings = 4, PrepMinutes = 10, CookMinutes = 35, Source = "Family favorite", CreatedAtUtc = createdAtUtc, UpdatedAtUtc = createdAtUtc },
-                new Recipe { Id = 11, Title = "Vegetable Stir Fry", Description = "Fast vegetable dinner.", Ingredients = "1 broccoli\n1 pepper\n2 carrots\n2 tbsp soy sauce\n1 tbsp oil", Instructions = "Slice vegetables.\nStir fry on high heat.\nAdd soy sauce and serve with rice.", Category = "Dinner", Servings = 3, PrepMinutes = 10, CookMinutes = 12, Source = "Quick dinner list", CreatedAtUtc = createdAtUtc, UpdatedAtUtc = createdAtUtc },
-                new Recipe { Id = 12, Title = "Baked Salmon", Description = "Simple lemon salmon.", Ingredients = "4 salmon fillets\n1 lemon\n1 tbsp olive oil\nSalt\nPepper", Instructions = "Season salmon and add lemon slices.\nBake until flaky.\nServe with potatoes or salad.", Category = "Dinner", Servings = 4, PrepMinutes = 8, CookMinutes = 18, Source = "Weeknight fish", CreatedAtUtc = createdAtUtc, UpdatedAtUtc = createdAtUtc },
-                new Recipe { Id = 13, Title = "Turkey Sandwich", Description = "Quick lunch sandwich.", Ingredients = "4 slices bread\n120 g turkey\nLettuce\nTomato\nMustard", Instructions = "Toast bread if desired.\nLayer turkey, lettuce, and tomato.\nSpread mustard and close sandwich.", Category = "Lunch", Servings = 2, PrepMinutes = 7, CookMinutes = null, Source = "Work lunch", CreatedAtUtc = createdAtUtc, UpdatedAtUtc = createdAtUtc },
-                new Recipe { Id = 14, Title = "Chickpea Salad", Description = "Bright salad with chickpeas.", Ingredients = "1 can chickpeas\n1 cucumber\n2 tomatoes\n2 tbsp olive oil\n1 tbsp lemon juice", Instructions = "Drain chickpeas and chop vegetables.\nMix with oil and lemon.\nSeason and serve.", Category = "Lunch", Servings = 3, PrepMinutes = 12, CookMinutes = null, Source = "Light lunch", CreatedAtUtc = createdAtUtc, UpdatedAtUtc = createdAtUtc },
-                new Recipe { Id = 15, Title = "Tuna Pasta Salad", Description = "Cold pasta lunch.", Ingredients = "250 g pasta\n1 can tuna\n1 cup peas\n2 tbsp mayo\n1 tbsp lemon juice", Instructions = "Cook and cool pasta.\nMix tuna, peas, mayo, and lemon.\nCombine and chill briefly.", Category = "Lunch", Servings = 4, PrepMinutes = 10, CookMinutes = 12, Source = "Picnic recipe", CreatedAtUtc = createdAtUtc, UpdatedAtUtc = createdAtUtc },
-                new Recipe { Id = 16, Title = "Tomato Mozzarella Toast", Description = "Open sandwich with basil.", Ingredients = "4 slices bread\n2 tomatoes\n125 g mozzarella\nBasil\nOlive oil", Instructions = "Toast bread.\nTop with tomato and mozzarella.\nFinish with basil and olive oil.", Category = "Lunch", Servings = 2, PrepMinutes = 8, CookMinutes = 4, Source = "Summer lunch", CreatedAtUtc = createdAtUtc, UpdatedAtUtc = createdAtUtc },
-                new Recipe { Id = 17, Title = "Banana Bread", Description = "Moist loaf for snack time.", Ingredients = "3 ripe bananas\n2 eggs\n180 g flour\n100 g sugar\n1 tsp baking soda", Instructions = "Mash bananas and mix with eggs.\nStir in dry ingredients.\nBake until golden.", Category = "Baking", Servings = 8, PrepMinutes = 10, CookMinutes = 50, Source = "Grandma's notes", CreatedAtUtc = createdAtUtc, UpdatedAtUtc = createdAtUtc },
-                new Recipe { Id = 18, Title = "Scones", Description = "Simple afternoon scones.", Ingredients = "300 g flour\n2 tsp baking powder\n75 g butter\n150 ml milk", Instructions = "Rub butter into flour.\nAdd milk to form dough.\nCut rounds and bake.", Category = "Baking", Servings = 8, PrepMinutes = 12, CookMinutes = 14, Source = "Tea-time recipe", CreatedAtUtc = createdAtUtc, UpdatedAtUtc = createdAtUtc },
-                new Recipe { Id = 19, Title = "Cinnamon Rolls", Description = "Soft rolls with cinnamon filling.", Ingredients = "500 g flour\n250 ml milk\n7 g yeast\n80 g sugar\n2 tsp cinnamon", Instructions = "Mix dough and let rise.\nFill with sugar and cinnamon.\nRoll, slice, and bake.", Category = "Baking", Servings = 10, PrepMinutes = 25, CookMinutes = 25, Source = "Weekend baking", CreatedAtUtc = createdAtUtc, UpdatedAtUtc = createdAtUtc },
-                new Recipe { Id = 20, Title = "Whole Wheat Bread", Description = "Basic everyday loaf.", Ingredients = "500 g whole wheat flour\n350 ml water\n7 g yeast\n1 tsp salt", Instructions = "Knead dough and let rise.\nShape loaf and proof.\nBake until crusty.", Category = "Baking", Servings = 10, PrepMinutes = 20, CookMinutes = 40, Source = "Daily bread", CreatedAtUtc = createdAtUtc, UpdatedAtUtc = createdAtUtc },
-                new Recipe { Id = 21, Title = "Chocolate Pudding", Description = "Quick stovetop dessert.", Ingredients = "500 ml milk\n40 g cocoa powder\n60 g sugar\n30 g cornstarch", Instructions = "Whisk all ingredients cold.\nCook while stirring until thick.\nChill before serving.", Category = "Dessert", Servings = 4, PrepMinutes = 8, CookMinutes = 10, Source = "Family dessert", CreatedAtUtc = createdAtUtc, UpdatedAtUtc = createdAtUtc },
-                new Recipe { Id = 22, Title = "Apple Crumble", Description = "Warm apples under crunchy topping.", Ingredients = "6 apples\n120 g flour\n80 g sugar\n80 g butter\n1 tsp cinnamon", Instructions = "Slice apples and season.\nRub crumble topping ingredients.\nBake until bubbling and golden.", Category = "Dessert", Servings = 6, PrepMinutes = 15, CookMinutes = 35, Source = "Autumn favorite", CreatedAtUtc = createdAtUtc, UpdatedAtUtc = createdAtUtc },
-                new Recipe { Id = 23, Title = "Rice Pudding", Description = "Creamy baked rice pudding.", Ingredients = "120 g short-grain rice\n1 l milk\n60 g sugar\n1 tsp vanilla", Instructions = "Mix ingredients in baking dish.\nBake slowly, stirring once.\nServe warm or cold.", Category = "Dessert", Servings = 6, PrepMinutes = 10, CookMinutes = 70, Source = "Old cookbook", CreatedAtUtc = createdAtUtc, UpdatedAtUtc = createdAtUtc },
-                new Recipe { Id = 24, Title = "Lemon Bars", Description = "Tangy bars with short crust.", Ingredients = "150 g flour\n90 g butter\n180 g sugar\n2 eggs\n2 lemons", Instructions = "Bake crust first.\nWhisk lemon filling and pour over crust.\nBake again and cool.", Category = "Dessert", Servings = 12, PrepMinutes = 15, CookMinutes = 30, Source = "Bake sale", CreatedAtUtc = createdAtUtc, UpdatedAtUtc = createdAtUtc },
-                new Recipe { Id = 25, Title = "Mashed Potatoes", Description = "Creamy mashed potatoes.", Ingredients = "1 kg potatoes\n40 g butter\n120 ml milk\nSalt", Instructions = "Boil potatoes until tender.\nMash with butter and milk.\nSeason well.", Category = "Sides", Servings = 4, PrepMinutes = 10, CookMinutes = 20, Source = "Dinner side", CreatedAtUtc = createdAtUtc, UpdatedAtUtc = createdAtUtc },
-                new Recipe { Id = 26, Title = "Roasted Carrots", Description = "Sweet oven-roasted carrots.", Ingredients = "600 g carrots\n1 tbsp oil\nSalt\nPepper", Instructions = "Slice carrots and season.\nRoast until browned at edges.\nServe warm.", Category = "Sides", Servings = 4, PrepMinutes = 8, CookMinutes = 25, Source = "Sheet pan side", CreatedAtUtc = createdAtUtc, UpdatedAtUtc = createdAtUtc },
-                new Recipe { Id = 27, Title = "Cucumber Salad", Description = "Fresh and simple salad.", Ingredients = "1 cucumber\n2 tbsp yogurt\n1 tbsp vinegar\nDill", Instructions = "Slice cucumber thinly.\nMix dressing ingredients.\nToss and chill briefly.", Category = "Sides", Servings = 3, PrepMinutes = 8, CookMinutes = null, Source = "Summer table", CreatedAtUtc = createdAtUtc, UpdatedAtUtc = createdAtUtc },
-                new Recipe { Id = 28, Title = "Garlic Green Beans", Description = "Pan-tossed green beans.", Ingredients = "400 g green beans\n2 cloves garlic\n1 tbsp olive oil\nSalt", Instructions = "Blanch green beans.\nSaute garlic in oil.\nToss beans and season.", Category = "Sides", Servings = 4, PrepMinutes = 8, CookMinutes = 10, Source = "Weeknight side", CreatedAtUtc = createdAtUtc, UpdatedAtUtc = createdAtUtc },
-                new Recipe { Id = 29, Title = "Strawberry Jam", Description = "Small-batch fruit preserve.", Ingredients = "1 kg strawberries\n700 g sugar\n2 tbsp lemon juice", Instructions = "Cook strawberries with sugar.\nSimmer until jammy.\nJar while hot.", Category = "Preserves", Servings = null, PrepMinutes = 15, CookMinutes = 30, Source = "Summer preserving", CreatedAtUtc = createdAtUtc, UpdatedAtUtc = createdAtUtc },
-                new Recipe { Id = 30, Title = "Pickled Cucumbers", Description = "Crunchy quick pickles.", Ingredients = "2 cucumbers\n250 ml vinegar\n250 ml water\n2 tbsp sugar\n1 tbsp salt", Instructions = "Slice cucumbers.\nBoil brine ingredients.\nPour over cucumbers and cool.", Category = "Preserves", Servings = null, PrepMinutes = 10, CookMinutes = 5, Source = "Pantry shelf", CreatedAtUtc = createdAtUtc, UpdatedAtUtc = createdAtUtc },
-                new Recipe { Id = 31, Title = "Peach Chutney", Description = "Sweet-spiced chutney.", Ingredients = "800 g peaches\n1 onion\n150 ml vinegar\n100 g sugar\n1 tsp ginger", Instructions = "Chop peaches and onion.\nCook with remaining ingredients.\nSimmer until thick.", Category = "Preserves", Servings = null, PrepMinutes = 15, CookMinutes = 35, Source = "Late summer batch", CreatedAtUtc = createdAtUtc, UpdatedAtUtc = createdAtUtc },
-                new Recipe { Id = 32, Title = "Garden Herb Pasta", Description = "Light pasta with fresh herbs.", Ingredients = "300 g pasta\n2 tbsp olive oil\n2 cloves garlic\nParsley\nBasil", Instructions = "Cook pasta.\nWarm oil with garlic.\nToss pasta with herbs and season.", Category = null, Servings = 3, PrepMinutes = 10, CookMinutes = 12, Source = "Garden season", CreatedAtUtc = createdAtUtc, UpdatedAtUtc = createdAtUtc }
+                new Recipe
+                {
+                    Id = 1,
+                    Title = "Scrambled Eggs",
+                    Slug = "scrambled-eggs",
+                    Introduction = "Most scrambled eggs are overcooked into rubber and regret. The dish is simple, which means every choice matters.",
+                    Objective = "A soft, decadent scramble that still tastes unmistakably like egg.",
+                    Ingredients = "2 to 3 eggs per person\nA small knob of butter\nFine salt",
+                    Preparation = "Use a small saucepan and a flexible spatula. Keep salt nearby. Start with less butter than you think and adjust next time.",
+                    Execution = "Melt butter over gentle heat.\nAdd beaten eggs and stir slowly, scraping the base often.\nTake the pan off heat while the eggs still look slightly underdone.\nResidual heat will finish them.\nTaste, then salt.",
+                    Reflection = "If the eggs tightened too quickly, your heat was too high. If they turned dry, you cooked a minute too long. Next batch: lower heat, earlier stop.",
+                    Variation = "Better eggs improve flavor immediately.\nA spoon of creme fraiche at the end gives extra silk.\nFresh chives and black pepper are optional, not mandatory.",
+                    Category = "Breakfast",
+                    TimeEstimate = "About 10 minutes",
+                    Difficulty = "Beginner",
+                    Source = "Kitchen notes",
+                    CreatedAtUtc = createdAtUtc,
+                    UpdatedAtUtc = createdAtUtc
+                },
+                new Recipe
+                {
+                    Id = 2,
+                    Title = "Tomato Soup",
+                    Slug = "tomato-soup",
+                    Introduction = "Tomato soup should feel bright and comforting at once, not flat or sweet.",
+                    Objective = "A balanced soup with acidity, body, and warmth.",
+                    Ingredients = "1 onion\n2 garlic cloves\n1 can whole tomatoes\nStock or water\nOlive oil\nSalt",
+                    Preparation = "Slice onion and garlic before heating the pot. Keep a little stock aside for adjusting thickness later.",
+                    Execution = "Cook onion gently in oil until soft.\nAdd garlic briefly.\nAdd tomatoes and stock, then simmer until integrated.\nBlend smooth or leave rustic.\nSeason in small steps.",
+                    Reflection = "If it tastes dull, it usually needs salt first, then a touch of acidity. If too sharp, simmer longer.",
+                    Variation = "Finish with cream for a softer bowl, or add chili for heat.",
+                    Category = "Soup",
+                    TimeEstimate = "30 to 40 minutes",
+                    Difficulty = "Beginner",
+                    Source = "Family notebook",
+                    CreatedAtUtc = createdAtUtc,
+                    UpdatedAtUtc = createdAtUtc
+                },
+                new Recipe
+                {
+                    Id = 3,
+                    Title = "Roast Chicken Tray",
+                    Slug = "roast-chicken-tray",
+                    Introduction = "A tray roast is less about precision and more about sequencing and heat.",
+                    Objective = "Juicy chicken with properly cooked vegetables in one pass.",
+                    Ingredients = "Chicken pieces\nPotatoes\nCarrots\nOlive oil\nSalt and pepper",
+                    Preparation = "Cut vegetables to similar size. Pat chicken dry so it roasts instead of steams.",
+                    Execution = "Heat oven well before loading.\nToss vegetables with oil and seasoning.\nPlace chicken skin-side up with space between pieces.\nRoast until chicken is cooked and vegetables caramelized.\nRest before serving.",
+                    Reflection = "Crowding the tray causes steaming. If vegetables lag behind, spread them out and give more high heat.",
+                    Variation = "Swap carrots for fennel or onions. Lemon and thyme change the profile quickly.",
+                    Category = "Dinner",
+                    TimeEstimate = "About 1 hour",
+                    Difficulty = "Intermediate",
+                    Source = "Sunday routine",
+                    CreatedAtUtc = createdAtUtc,
+                    UpdatedAtUtc = createdAtUtc
+                },
+                new Recipe
+                {
+                    Id = 4,
+                    Title = "Strawberry Jam",
+                    Slug = "strawberry-jam",
+                    Introduction = "Jam is about controlling moisture and timing, not just boiling fruit.",
+                    Objective = "A spoonable jam that still tastes fresh.",
+                    Ingredients = "Strawberries\nSugar\nLemon juice",
+                    Preparation = "Wash and hull berries. Warm jars while cooking. Keep a cold plate in the freezer for set testing.",
+                    Execution = "Cook berries and sugar until dissolved.\nAdd lemon juice and simmer steadily.\nSkim foam if needed.\nTest set on the cold plate.\nJar while hot.",
+                    Reflection = "Underset jam needs longer simmer. Overcooked jam tastes dull and sticky.",
+                    Variation = "A little black pepper or vanilla changes the finish without hiding the fruit.",
+                    Category = "Preserves",
+                    TimeEstimate = "45 to 60 minutes",
+                    Difficulty = "Intermediate",
+                    Source = "Summer preserve book",
+                    CreatedAtUtc = createdAtUtc,
+                    UpdatedAtUtc = createdAtUtc
+                }
             );
         });
     }

@@ -1,12 +1,16 @@
 export type Recipe = {
     id: number;
     title: string;
-    description: string | null;
+    slug: string | null;
+    introduction: string | null;
+    objective: string | null;
     ingredients: string;
-    instructions: string;
+    preparation: string | null;
+    execution: string;
+    reflection: string | null;
+    variation: string | null;
     category: string | null;
-    servings: number | null;
-    prepMinutes: number | null;
-    cookMinutes: number | null;
+    timeEstimate: string | null;
+    difficulty: string | null;
     source: string | null;
 };

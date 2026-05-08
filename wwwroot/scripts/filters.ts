@@ -25,10 +25,16 @@ export function matchesSearch(recipe: Recipe, searchQuery: string): boolean {
 
     const searchableFields = [
         recipe.title,
-        recipe.description ?? "",
+        recipe.introduction ?? "",
+        recipe.objective ?? "",
         recipe.category ?? "",
         recipe.ingredients,
-        recipe.instructions,
+        recipe.preparation ?? "",
+        recipe.execution,
+        recipe.reflection ?? "",
+        recipe.variation ?? "",
+        recipe.timeEstimate ?? "",
+        recipe.difficulty ?? "",
         recipe.source ?? ""
     ];
 
