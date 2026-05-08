@@ -114,12 +114,12 @@ input[type="search"]:focus-visible {
     outline-offset: 2px;
 }
 
-#recipe-groups {
+#catalog-groups {
     display: grid;
     gap: var(--space-5);
 }
 
-.category-section h2 {
+.letter-section h2 {
     margin: 0 0 var(--space-2);
     padding-bottom: var(--space-1);
     border-bottom: 1px solid var(--color-border);
@@ -127,19 +127,12 @@ input[type="search"]:focus-visible {
     letter-spacing: 0.02em;
 }
 
-.recipe-list {
+.catalog-list {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
     gap: var(--space-2);
-}
-
-.recipe-list-item-expanded {
-    margin: var(--space-1) 0;
-    padding: var(--space-2) 0;
-    border-top: 1px solid var(--color-border);
-    border-bottom: 1px solid var(--color-border);
 }
 
 .catalog-item[open] {
@@ -149,7 +142,7 @@ input[type="search"]:focus-visible {
     border-bottom: 1px solid var(--color-border);
 }
 
-.recipe-button {
+.catalog-item-toggle {
     width: 100%;
     border: 0;
     padding: 0;
@@ -161,34 +154,34 @@ input[type="search"]:focus-visible {
     list-style: none;
 }
 
-.recipe-button::-webkit-details-marker {
+.catalog-item-toggle::-webkit-details-marker {
     display: none;
 }
 
-.recipe-button:hover .recipe-title {
+.catalog-item-toggle:hover .catalog-item-title {
     color: var(--color-accent-hover);
 }
 
-.recipe-button:focus-visible {
+.catalog-item-toggle:focus-visible {
     outline: 2px solid var(--color-focus);
     outline-offset: 2px;
     border-radius: 0.2rem;
 }
 
-.recipe-title {
+.catalog-item-title {
     margin: 0;
     font-size: 1.08rem;
     line-height: 1.35;
     font-weight: 500;
 }
 
-.recipe-inline-detail {
+.catalog-item-detail {
     max-width: 45rem;
     margin-top: var(--space-3);
     padding: 0 0 var(--space-1);
 }
 
-.recipe-inline-detail h3 {
+.catalog-item-detail h3 {
     margin: 0 0 var(--space-2);
     font-size: 1.65rem;
     line-height: 1.2;
@@ -196,7 +189,7 @@ input[type="search"]:focus-visible {
     color: var(--color-text);
 }
 
-.recipe-inline-detail h4 {
+.catalog-item-detail h4 {
     margin: var(--space-4) 0 var(--space-2);
     font: 600 0.95rem/1.2 var(--font-sans);
     letter-spacing: 0.03em;
@@ -204,7 +197,7 @@ input[type="search"]:focus-visible {
     color: var(--color-muted);
 }
 
-.recipe-inline-detail p {
+.catalog-item-detail p {
     margin: 0 0 var(--space-3);
     max-width: 42rem;
 }
@@ -218,7 +211,7 @@ input[type="search"]:focus-visible {
         padding: var(--space-5) var(--space-3) 3rem;
     }
 
-    .recipe-inline-detail h3 {
+    .catalog-item-detail h3 {
         font-size: 1.25rem;
     }
 }

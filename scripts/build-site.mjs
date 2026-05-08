@@ -181,12 +181,12 @@ function buildItemMarkup(item, config) {
     const detailChildren = indentLines([metadataMarkup, sectionsMarkup].filter((value) => value.length > 0).join("\n"), 8);
 
     return [
-        `<li class="recipe-list-item" id="${escapeHtml(slug)}" data-catalog-item data-search="${escapeHtml(searchText)}">`,
+        `<li class="catalog-list-item" id="${escapeHtml(slug)}" data-catalog-item data-search="${escapeHtml(searchText)}">`,
         "    <details class=\"catalog-item\">",
-        "        <summary class=\"recipe-button\">",
-        `            <h3 class="recipe-title">${escapeHtml(title)}</h3>`,
+        "        <summary class=\"catalog-item-toggle\">",
+        `            <h3 class="catalog-item-title">${escapeHtml(title)}</h3>`,
         "        </summary>",
-        "        <div class=\"recipe-inline-detail\">",
+        "        <div class=\"catalog-item-detail\">",
         detailChildren,
         "        </div>",
         "    </details>",
@@ -271,9 +271,9 @@ async function buildSite() {
                 .map((item) => buildItemMarkup(item, { titleField, slugField, metadata, sections, searchFields }))
                 .join("\n");
             return [
-                `                <section class="category-section" id="letter-${letter}" data-letter-section="${letter}">`,
+                `                <section class="letter-section" id="letter-${letter}" data-letter-section="${letter}">`,
                 `                    <h2>${letter}</h2>`,
-                "                    <ul class=\"recipe-list\">",
+                "                    <ul class=\"catalog-list\">",
                 indentLines(itemMarkup, 24),
                 "                    </ul>",
                 "                </section>"
@@ -295,14 +295,14 @@ async function buildSite() {
 <body>
     <main>
         <h1>${escapeHtml(title)}</h1>
-${descriptionMarkup}        <label for="search-input" class="search-label">Search</label>
+${descriptionMarkup}
         <input id="search-input" type="search" autocomplete="off" placeholder="Search ${escapeHtml(itemNamePlural.toLowerCase())}...">
         <p id="empty-state" hidden>No ${escapeHtml(itemNamePlural.toLowerCase())} match your search.</p>
         <nav id="letter-index" aria-label="Catalog index">
 ${indexNav}
         </nav>
-        <section id="recipe-list-view">
-            <div id="recipe-groups">
+        <section id="catalog-list-view">
+            <div id="catalog-groups">
 ${groupsMarkup}
             </div>
         </section>
