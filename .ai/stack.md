@@ -2,9 +2,9 @@
 
 ## Core
 
-- ASP.NET Core using controllers.
-- .NET 10 currently installed and used by the project.
-- PostgreSQL for persistent storage.
+- Static site served from `wwwroot`.
+- Authored Markdown recipes under `content/recipes`.
+- Build-time JSON generation to `wwwroot/data/recipes.json`.
 - Plain HTML, simple CSS, and TypeScript for frontend behavior.
 - No frontend framework by default.
 
@@ -12,20 +12,17 @@
 
 ## Backend
 
-- Use ASP.NET Core MVC/Web API controllers.
-- Keep controllers thin: HTTP concerns, validation, status codes, and delegation.
-- Keep domain/application logic outside controllers when it grows beyond simple CRUD.
-- Prefer built-in .NET features before adding packages.
+No backend runtime in the current architecture.
 
-- Use EF Core for PostgreSQL access and migrations.
-- Keep EF Core usage straightforward and explicit.
-- Do not add Dapper or another data access style unless there is a clear, specific reason.
+- Do not add controllers or API endpoints unless a future feature explicitly reintroduces a backend.
+- Do not add database dependencies for the current authored cookbook direction.
+- Keep data-generation scripts small and explicit.
 
 ---
 
 ## Frontend
 
-- Static assets served by ASP.NET Core, likely from `wwwroot`.
+- Static assets served directly from `wwwroot`.
 - Use semantic HTML.
 - Use plain CSS.
 - Do not add SCSS.
@@ -38,26 +35,23 @@
 
 - WSL Ubuntu.
 - Project files should stay under `/home/...`, not `/mnt/c/...`.
-- Docker or Docker Compose for local PostgreSQL.
-- `psql` for direct database inspection.
-- Node/npm only for TypeScript tooling.
+- Node/npm for TypeScript tooling and recipe build scripts.
+- Local static dev server for `wwwroot`.
 
 ---
 
 ## Deployment Direction
 
-- Deploy one ASP.NET Core app that serves both the API and static frontend assets.
-- Use a managed PostgreSQL database or a simple Docker-based deployment.
-- Keep environment-specific configuration in environment variables or appsettings files.
-- Avoid splitting frontend and backend deployment until there is a real need.
+- Deploy static files only (`wwwroot` output).
+- Treat Markdown recipe files as source of truth and generated JSON as runtime data.
+- Keep deployment compatible with basic static hosts.
 
 ---
 
 ## Future, Not Yet
 
+- Backend/API runtime.
+- Database persistence.
 - Authentication.
 - Recipe image upload/storage.
-- Full-text search tuning.
-- Import/export.
 - Public/private sharing rules.
-- Automated test suite beyond focused coverage.

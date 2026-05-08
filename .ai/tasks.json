@@ -47,6 +47,12 @@
       "title": "Editorial recipe format",
       "status": "done",
       "spec": ".ai/features/008-editorial-recipe-format.md"
+    },
+    {
+      "id": "009-pivot-to-static-markdown-recipes",
+      "title": "Pivot to static Markdown recipes",
+      "status": "done",
+      "spec": ".ai/features/009-pivot-to-static-markdown-recipes.md"
     }
   ],
   "decisions": []

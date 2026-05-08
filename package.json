@@ -2,14 +2,13 @@
   "name": "simple-recipe-site",
   "private": true,
   "scripts": {
-    "build": "tsc",
+    "build:recipes": "node scripts/build-recipes.mjs",
+    "build": "npm run build:recipes && tsc",
     "watch:ts": "tsc -w",
-    "watch:dotnet": "dotnet watch run --launch-profile http",
-    "dev": "npm run build && concurrently \"npm:watch:ts\" \"npm:watch:dotnet\"",
+    "dev": "npm run build && node scripts/serve-wwwroot.mjs",
     "verify": "./scripts/verify-local.sh"
   },
   "devDependencies": {
-    "concurrently": "^9.2.1",
     "typescript": "^5.8.3"
   }
 }

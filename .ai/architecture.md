@@ -2,34 +2,30 @@
 
 ## Overall
 
-Minimal monolithic application.
+Minimal static recipe site.
 
-- ASP.NET Core serves the API and the static frontend.
-- Controllers expose HTTP endpoints.
-- PostgreSQL stores recipe data.
+- Markdown files in `content/recipes` are the source of truth.
+- A build script generates `wwwroot/data/recipes.json`.
 - Frontend is plain HTML, CSS, and TypeScript with no client framework.
-- Keep the system easy to run locally, deploy, and maintain.
+- Runtime serves static files only.
 
 ---
 
 ## Suggested Structure
 
-At the start, keep the default .NET project layout and add structure only when needed:
+Keep structure centered around authored content and static assets:
 
 ```text
 /
-  Program.cs
-  appsettings.json
-  appsettings.Development.json
-  Controllers/
-    RecipesController.cs
-  Recipes/
-    Recipe.cs
-    RecipeService.cs
-    RecipeRepository.cs
-  Data/
-    AppDbContext.cs
+  content/
+    recipes/
+      *.md
+  scripts/
+    build-recipes.mjs
+    serve-wwwroot.mjs
   wwwroot/
+    data/
+      recipes.json
     index.html
     styles/
       site.css
@@ -41,43 +37,27 @@ The exact structure can evolve. Prefer clarity over strict layering.
 
 ---
 
-## Backend Boundaries
+## Build Boundaries
 
-Controllers:
+Recipe content:
 
-- Handle routing, request/response models, validation, and status codes.
-- Delegate meaningful work to recipe-specific services or repositories.
-- Should stay small and readable.
+- Markdown files hold recipe metadata and editorial sections.
+- Content is authored manually and reviewed like normal source code.
 
-Recipe/domain code:
+Build scripts:
 
-- Owns recipe behavior, data shaping, and persistence coordination.
-- Keep it close to the feature until duplication or complexity justifies shared abstractions.
-
-Data access:
-
-- Use PostgreSQL.
-- Use EF Core for data access and migrations.
-- Keep schema evolution incremental.
-- Avoid designing a large generic database layer before the app needs it.
+- Parse Markdown frontmatter and known section headings.
+- Validate required fields.
+- Generate deterministic recipe JSON for runtime.
 
 ---
 
 ## API Shape
 
-Prefer stable, boring REST-style endpoints:
+No runtime API in the current architecture.
 
-- `GET /api/recipes`
-- `GET /api/recipes/{id}`
-- `POST /api/recipes`
-- `PUT /api/recipes/{id}`
-- `DELETE /api/recipes/{id}`
-
-Search can start simple:
-
-- `GET /api/recipes?query=...`
-
-Only add specialized endpoints when the UI needs them.
+- Frontend fetches `/data/recipes.json`.
+- Keep routing client-side via URL hash only.
 
 ---
 
@@ -86,28 +66,24 @@ Only add specialized endpoints when the UI needs them.
 - Static pages and assets served from `wwwroot`.
 - Use semantic HTML and progressive enhancement.
 - Keep TypeScript modules small and page-oriented.
-- Use `fetch` to call `/api/...` endpoints.
+- Use `fetch` to load `/data/recipes.json`.
 - Avoid client-side routing until there is a strong reason.
 
 ---
 
-## Database
+## Data Format
 
-Initial likely tables:
+Runtime data shape comes from generated JSON:
 
-- `recipes`
-- `recipe_ingredients` if ingredients need structure
-- `recipe_steps` if instructions need structure
-- optional `tags` or `categories`
-
-Start with a simple schema. A text-based ingredients/instructions model is acceptable early if it keeps the app moving.
+- `id`, `title`, `slug`
+- editorial fields (`introduction`, `objective`, `ingredients`, `preparation`, `execution`, `reflection`, `variation`)
+- optional metadata (`category`, `timeEstimate`, `difficulty`, `source`)
 
 ---
 
 ## Rules
 
-- Keep the app monolithic.
+- Keep the app static-first and monolithic.
 - Prefer simple files and explicit code.
 - Do not introduce frontend frameworks.
-- Do not introduce a service/repository abstraction for every class by default.
-- Add shared infrastructure only after repeated need appears.
+- Do not introduce a backend/database layer unless a feature explicitly requires it.

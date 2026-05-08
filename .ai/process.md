@@ -29,11 +29,11 @@
 
 ### 3. Backend
 
-- Add or update controller endpoints.
-- Keep controllers thin.
-- Add recipe-specific services/repositories only when useful.
-- Update EF Core models and migrations when persistence changes.
-- Avoid adding packages until the need is clear.
+Current product direction has no backend runtime.
+
+- Add or update Markdown content under `content/recipes`.
+- Update recipe build scripts when schema/authoring rules evolve.
+- Avoid introducing backend/database dependencies unless explicitly requested.
 
 Suggested commit style:
 
@@ -63,7 +63,7 @@ feat: add recipe list UI
 - Use `npm run verify` for short-lived agent validation.
 - Use `npm run dev` only for interactive long-running local development.
 - Agents should not kill unrelated processes. If the app port is already in use, report it and ask the user to stop the existing dev server.
-- Test API endpoints with `.http` files, `curl`, or browser requests.
+- Test static endpoints with `curl` or browser requests.
 - Verify frontend behavior in the browser.
 - Run relevant build/test commands before finishing work.
 
@@ -83,7 +83,6 @@ feat: add recipe list UI
 Human interactive workflow:
 
 ```bash
-docker compose up -d
 npm run dev
 ```
 
@@ -95,7 +94,7 @@ npm run verify
 
 `npm run verify` owns the app process it starts and cleans it up when finished. It should fail rather than killing unknown processes if the configured app port is already in use.
 
-For one-off TypeScript builds:
+For one-off recipe + TypeScript builds:
 
 ```bash
 npm run build

@@ -1,0 +1,34 @@
+[
+  {
+    "id": 1,
+    "title": "Scrambled Eggs",
+    "slug": "scrambled-eggs",
+    "category": "Eggs",
+    "difficulty": "Gentle but unforgiving",
+    "timeEstimate": "10 minutes",
+    "source": null,
+    "introduction": "Bad scrambled eggs are rubber and regret. Good scrambled eggs feel almost unfairly luxurious for such a short recipe.",
+    "objective": "A soft, creamy scramble that still tastes cleanly of egg.",
+    "ingredients": "Eggs, butter, and fine salt.",
+    "preparation": "Use a small saucepan and a flexible spatula. Keep salt beside the stove. Crack eggs into a bowl and beat until uniform.",
+    "execution": "Melt butter over gentle heat.\nAdd eggs and stir slowly, sweeping the bottom constantly.\nPull the pan off heat before the eggs look fully done.\nLet residual heat finish the texture.\nTaste, then salt.",
+    "reflection": "Most misses come from too much heat or too much confidence. If eggs seize, lower heat next time. If they dry out, stop earlier.",
+    "variation": "Better eggs improve everything.\nA spoon of creme fraiche adds extra silk.\nChives and black pepper are optional finishing notes."
+  },
+  {
+    "id": 2,
+    "title": "Tomato Soup",
+    "slug": "tomato-soup",
+    "category": "Soup",
+    "difficulty": "Beginner",
+    "timeEstimate": "35 minutes",
+    "source": "Family notebook",
+    "introduction": "Tomato soup should be bright and comforting at the same time, not thin or sugary.",
+    "objective": "A balanced bowl with body, acidity, and warmth.",
+    "ingredients": "Onion, garlic, canned tomatoes, olive oil, stock or water, and salt.",
+    "preparation": "Slice onion and garlic before heating the pot. Keep extra stock nearby to adjust consistency.",
+    "execution": "Cook onion gently in olive oil until soft.\nAdd garlic briefly.\nAdd tomatoes and stock, then simmer until integrated.\nBlend to your preferred texture.\nSeason in small steps.",
+    "reflection": "If flavor feels flat, it usually needs salt first. If still dull, add a little acidity. If sharp, simmer longer.",
+    "variation": "Finish with cream for a softer profile, or chili flakes for heat."
+  }
+]

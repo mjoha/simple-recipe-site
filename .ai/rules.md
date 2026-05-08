@@ -21,22 +21,20 @@
 
 ## API
 
-- Use ASP.NET Core controllers.
-- Prefer `/api/...` routes for JSON endpoints.
-- Controllers should be thin.
-- Put business logic in recipe-specific code when it grows beyond simple request handling.
-- Return appropriate HTTP status codes instead of encoding errors only in response bodies.
+Current architecture has no runtime API.
+
+- Frontend should fetch generated static data from `/data/recipes.json`.
+- Do not add controllers/endpoints unless a feature explicitly reintroduces backend runtime.
 
 ---
 
 ## Database
 
-- PostgreSQL is the production database.
-- Use EF Core for data access and migrations.
-- Evolve the schema incrementally.
-- Do not design the full schema upfront.
-- Do not mix database access styles without a clear reason.
-- Keep data portable and understandable.
+Current architecture has no runtime database.
+
+- Markdown files in `content/recipes` are source of truth.
+- Generated JSON in `wwwroot/data/recipes.json` is runtime data.
+- Do not add database dependencies unless explicitly required by a future feature.
 
 ---
 
@@ -66,4 +64,5 @@
 - No frontend framework by default.
 - No generic repository/service layer unless it earns its place.
 - No complex build pipeline for static assets.
+- No backend/database runtime unless explicitly needed.
 - No auth, image storage, queues, or background jobs until explicitly needed.

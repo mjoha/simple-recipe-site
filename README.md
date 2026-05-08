@@ -2,38 +2,23 @@
 
 ## Local Development
 
-1. Start PostgreSQL:
-
-   ```bash
-   docker compose up -d
-   ```
-
-2. Apply database migrations:
-
-   ```bash
-   dotnet tool restore
-   dotnet ef database update
-   ```
-
-   If your existing local Docker volume was created with older migrations and you hit schema mismatch issues, reset local DB volume first:
-
-   ```bash
-   docker compose down -v
-   docker compose up -d
-   dotnet ef database update
-   ```
-
-3. Build frontend TypeScript:
+1. Build recipes and frontend:
 
    ```bash
    npm run build
    ```
 
-4. Run the app:
+2. Run static dev server:
 
    ```bash
-   dotnet run --launch-profile http
+   npm run dev
    ```
 
-Frontend: `http://localhost:5002/`  
-API: `http://localhost:5002/api/recipes`
+Frontend: `http://localhost:5002/`
+Recipe data: `http://localhost:5002/data/recipes.json`
+
+## Authoring Recipes
+
+- Source files live in `content/recipes/*.md`.
+- Run `npm run build:recipes` to regenerate `wwwroot/data/recipes.json`.
+- `npm run build` runs both recipe generation and TypeScript compilation.
