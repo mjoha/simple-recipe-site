@@ -1,50 +1,52 @@
-import { groupRecipesByInitial, sortedInitialKeys } from "./filters.js";
-import { renderInlineRecipeDetail } from "./renderDetail.js";
-import type { Recipe } from "./types.js";
+import { groupItemsByInitial, sortedInitialKeys } from "./filters.js";
+import { renderInlineItemDetail } from "./renderDetail.js";
+import type { IndexData, IndexedItem } from "./types.js";
 
 type RenderListArgs = {
     container: HTMLElement;
     letterIndex: HTMLElement;
-    recipes: Recipe[];
-    expandedRecipeIds: ReadonlySet<number>;
-    onToggleRecipe: (recipeId: number) => void;
+    indexData: IndexData;
+    items: IndexedItem[];
+    expandedItemIds: ReadonlySet<number>;
+    onToggleItem: (itemId: number) => void;
 };
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
-function renderRecipeListItem(
-    recipe: Recipe,
-    expandedRecipeIds: ReadonlySet<number>,
-    onToggleRecipe: (recipeId: number) => void
+function renderItemListEntry(
+    item: IndexedItem,
+    indexData: IndexData,
+    expandedItemIds: ReadonlySet<number>,
+    onToggleItem: (itemId: number) => void
 ): HTMLLIElement {
     const listItem = document.createElement("li");
     listItem.className = "recipe-list-item";
-    listItem.id = `recipe-${recipe.id}`;
+    listItem.id = `item-${item.id}`;
     const button = document.createElement("button");
     button.type = "button";
     button.className = "recipe-button";
-    button.addEventListener("click", () => onToggleRecipe(recipe.id));
+    button.addEventListener("click", () => onToggleItem(item.id));
 
     const title = document.createElement("h3");
     title.className = "recipe-title";
-    title.textContent = recipe.title;
+    title.textContent = item.fields[indexData.titleField] ?? "";
 
     button.appendChild(title);
     listItem.appendChild(button);
 
-    if (expandedRecipeIds.has(recipe.id)) {
+    if (expandedItemIds.has(item.id)) {
         listItem.classList.add("recipe-list-item-expanded");
-        renderInlineRecipeDetail(listItem, recipe);
+        renderInlineItemDetail(listItem, item, indexData);
     }
 
     return listItem;
 }
 
-export function renderRecipeGroups({ container, letterIndex, recipes, expandedRecipeIds, onToggleRecipe }: RenderListArgs): void {
+export function renderItemGroups({ container, letterIndex, indexData, items, expandedItemIds, onToggleItem }: RenderListArgs): void {
     container.replaceChildren();
     letterIndex.replaceChildren();
-    const recipesByInitial = groupRecipesByInitial(recipes);
-    const initials = sortedInitialKeys(recipesByInitial);
+    const itemsByInitial = groupItemsByInitial(items, indexData.titleField);
+    const initials = sortedInitialKeys(itemsByInitial);
 
     const availableInitials = new Set(initials);
 
@@ -76,11 +78,11 @@ export function renderRecipeGroups({ container, letterIndex, recipes, expandedRe
         const list = document.createElement("ul");
         list.className = "recipe-list";
 
-        const initialRecipes = recipesByInitial.get(initial) ?? [];
-        initialRecipes.sort((left, right) => left.title.localeCompare(right.title));
+        const initialItems = itemsByInitial.get(initial) ?? [];
+        initialItems.sort((left, right) => (left.fields[indexData.titleField] ?? "").localeCompare(right.fields[indexData.titleField] ?? ""));
 
-        for (const recipe of initialRecipes) {
-            list.appendChild(renderRecipeListItem(recipe, expandedRecipeIds, onToggleRecipe));
+        for (const item of initialItems) {
+            list.appendChild(renderItemListEntry(item, indexData, expandedItemIds, onToggleItem));
         }
 
         initialSection.append(heading, list);

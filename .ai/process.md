@@ -31,8 +31,8 @@
 
 Current product direction has no backend runtime.
 
-- Add or update Markdown content under `content/recipes`.
-- Update recipe build scripts when schema/authoring rules evolve.
+- Add or update collection config/content under `content/`.
+- Update index build scripts when schema/authoring rules evolve.
 - Avoid introducing backend/database dependencies unless explicitly requested.
 
 Suggested commit style:

@@ -3,8 +3,9 @@
 ## Core
 
 - Static site served from `wwwroot`.
-- Authored Markdown recipes under `content/recipes`.
-- Build-time JSON generation to `wwwroot/data/recipes.json`.
+- Authored Markdown collection config under `content/index.md`.
+- Authored Markdown items under `content/items`.
+- Build-time JSON generation to `wwwroot/data/index.json`.
 - Plain HTML, simple CSS, and TypeScript for frontend behavior.
 - No frontend framework by default.
 
@@ -43,7 +44,7 @@ No backend runtime in the current architecture.
 ## Deployment Direction
 
 - Deploy static files only (`wwwroot` output).
-- Treat Markdown recipe files as source of truth and generated JSON as runtime data.
+- Treat Markdown config and item files as source of truth and generated JSON as runtime data.
 - Keep deployment compatible with basic static hosts.
 
 ---

@@ -59,6 +59,12 @@
       "title": "GitHub Pages deployment",
       "status": "done",
       "spec": ".ai/features/010-github-pages-deployment.md"
+    },
+    {
+      "id": "011-generic-indexed-markdown-site",
+      "title": "Generic indexed Markdown site",
+      "status": "done",
+      "spec": ".ai/features/011-generic-indexed-markdown-site.md"
     }
   ],
   "decisions": []

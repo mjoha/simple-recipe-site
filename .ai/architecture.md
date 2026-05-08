@@ -2,10 +2,11 @@
 
 ## Overall
 
-Minimal static recipe site.
+Minimal static indexed Markdown site.
 
-- Markdown files in `content/recipes` are the source of truth.
-- A build script generates `wwwroot/data/recipes.json`.
+- `content/index.md` defines collection configuration.
+- Markdown item files in `content/items` are source content.
+- A build script generates `wwwroot/data/index.json`.
 - Frontend is plain HTML, CSS, and TypeScript with no client framework.
 - Runtime serves static files only.
 
@@ -18,14 +19,15 @@ Keep structure centered around authored content and static assets:
 ```text
 /
   content/
-    recipes/
+    index.md
+    items/
       *.md
   scripts/
-    build-recipes.mjs
+    build-index.mjs
     serve-wwwroot.mjs
   wwwroot/
     data/
-      recipes.json
+      index.json
     index.html
     styles/
       site.css
@@ -39,16 +41,16 @@ The exact structure can evolve. Prefer clarity over strict layering.
 
 ## Build Boundaries
 
-Recipe content:
+Collection content:
 
-- Markdown files hold recipe metadata and editorial sections.
+- Markdown files hold item metadata and authored sections.
 - Content is authored manually and reviewed like normal source code.
 
 Build scripts:
 
 - Parse Markdown frontmatter and known section headings.
 - Validate required fields.
-- Generate deterministic recipe JSON for runtime.
+- Generate deterministic index JSON for runtime.
 
 ---
 
@@ -56,7 +58,7 @@ Build scripts:
 
 No runtime API in the current architecture.
 
-- Frontend fetches `/data/recipes.json`.
+- Frontend fetches `/data/index.json`.
 - Keep routing client-side via URL hash only.
 
 ---
@@ -66,18 +68,18 @@ No runtime API in the current architecture.
 - Static pages and assets served from `wwwroot`.
 - Use semantic HTML and progressive enhancement.
 - Keep TypeScript modules small and page-oriented.
-- Use `fetch` to load `/data/recipes.json`.
+- Use `fetch` to load `/data/index.json`.
 - Avoid client-side routing until there is a strong reason.
 
 ---
 
 ## Data Format
 
-Runtime data shape comes from generated JSON:
+Runtime data shape comes from generated index JSON:
 
-- `id`, `title`, `slug`
-- editorial fields (`introduction`, `objective`, `ingredients`, `preparation`, `execution`, `reflection`, `variation`)
-- optional metadata (`category`, `timeEstimate`, `difficulty`, `source`)
+- collection metadata (`title`, `itemName`, `itemNamePlural`)
+- field configuration (`titleField`, `slugField`, `searchFields`, `sections`, `metadata`)
+- item entries with deterministic `id`, `fields`, and `sections`
 
 ---
 

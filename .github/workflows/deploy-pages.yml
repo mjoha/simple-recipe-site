@@ -30,20 +30,20 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Generate recipe data
-        run: npm run build:recipes
+      - name: Generate index data
+        run: npm run build:index
 
-      - name: Commit generated recipe data if changed
+      - name: Commit generated index data if changed
         run: |
-          if git diff --quiet -- wwwroot/data/recipes.json; then
-            echo "No recipe data changes to commit."
+          if git diff --quiet -- wwwroot/data/index.json; then
+            echo "No index data changes to commit."
             exit 0
           fi
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add wwwroot/data/recipes.json
-          git commit -m "chore: regenerate recipe data"
+          git add wwwroot/data/index.json
+          git commit -m "chore: regenerate index data"
           git push origin main
 
       - name: Build static site

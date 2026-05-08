@@ -1,11 +1,11 @@
-import type { Recipe } from "./types.js";
+import type { IndexData } from "./types.js";
 
-export async function fetchRecipes(): Promise<Recipe[]> {
-    const response = await fetch("./data/recipes.json");
+export async function fetchIndex(): Promise<IndexData> {
+    const response = await fetch("./data/index.json");
 
     if (!response.ok) {
         throw new Error(`Request failed: ${response.status}`);
     }
 
-    return response.json() as Promise<Recipe[]>;
+    return response.json() as Promise<IndexData>;
 }

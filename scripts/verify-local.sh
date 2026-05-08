@@ -2,7 +2,7 @@
 set -euo pipefail
 
 app_url="${APP_URL:-http://localhost:5002}"
-data_url="${app_url}/data/recipes.json"
+data_url="${app_url}/data/index.json"
 log_file="${TMPDIR:-/tmp}/simple-recipe-site-verify.log"
 
 if curl -fsS --max-time 2 "${app_url}/" >/dev/null 2>&1 || curl -fsS --max-time 2 "${data_url}" >/dev/null 2>&1; then
@@ -24,8 +24,8 @@ trap cleanup EXIT
 for _ in {1..30}; do
   if curl -fsS --max-time 2 "${data_url}" >/dev/null 2>&1; then
     curl -fsS --max-time 2 "${app_url}/" >/dev/null
-    if ! node -e 'const fs=require("node:fs");const data=JSON.parse(fs.readFileSync("wwwroot/data/recipes.json","utf8"));if(!Array.isArray(data)||data.length===0){process.exit(1);}'; then
-      echo "Generated recipes.json is missing recipe entries."
+    if ! node -e 'const fs=require("node:fs");const data=JSON.parse(fs.readFileSync("wwwroot/data/index.json","utf8"));if(!Array.isArray(data.items)||data.items.length===0){process.exit(1);}'; then
+      echo "Generated index.json is missing entries."
       exit 1
     fi
     if ! [ -f "wwwroot/scripts/app.js" ]; then

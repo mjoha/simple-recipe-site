@@ -2,9 +2,9 @@
 
 ## Vision
 
-A minimalistic recipe site that feels like a digital version of grandma's old handwritten recipe book: simple, personal, warm, and easy to use.
+A minimalistic authored index site that feels like a digital field notebook: simple, personal, warm, and easy to use.
 
-The app should make it easy to preserve, browse, search, and share family recipes without turning into a heavy platform.
+The app should make it easy to preserve, browse, search, and share curated markdown entries without turning into a heavy platform.
 
 ---
 
@@ -12,15 +12,15 @@ The app should make it easy to preserve, browse, search, and share family recipe
 
 - Keep the experience calm, readable, and uncluttered.
 - Prefer fast pages and simple interactions over feature-heavy UI.
-- Make recipes easy to find by name, ingredient, category, and free-text search.
-- Treat recipes as personal, long-lived content that should remain easy to export or migrate.
-- Add features incrementally only when they support the core recipe-book experience.
+- Make entries easy to find by title, metadata, and free-text search.
+- Treat authored entries as long-lived content that should remain easy to export or migrate.
+- Add features incrementally only when they support the core indexed reference experience.
 
 ---
 
 ## Core Flow
 
-Browse recipes -> open recipe -> cook/share/save.
+Browse index -> open entry -> read/share/save.
 
 Secondary flows:
 

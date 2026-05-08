@@ -1,4 +1,4 @@
-import type { Recipe } from "./types.js";
+import type { IndexData, IndexedItem } from "./types.js";
 
 function appendMultilineText(parent: HTMLElement, text: string): void {
     const lines = text
@@ -14,27 +14,32 @@ function appendMultilineText(parent: HTMLElement, text: string): void {
     }
 }
 
-export function renderInlineRecipeDetail(container: HTMLElement, recipe: Recipe): void {
+function toHeadingLabel(value: string): string {
+    return value
+        .replace(/([a-z])([A-Z])/g, "$1 $2")
+        .replace(/[_-]+/g, " ")
+        .replace(/\s+/g, " ")
+        .trim()
+        .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+export function renderInlineItemDetail(container: HTMLElement, item: IndexedItem, indexData: IndexData): void {
     const detail = document.createElement("div");
     detail.className = "recipe-inline-detail";
-    detail.id = `recipe-expanded-${recipe.id}`;
+    detail.id = `item-expanded-${item.id}`;
 
     const title = document.createElement("h3");
-    title.textContent = recipe.title;
+    title.textContent = item.fields[indexData.titleField] ?? "";
     detail.appendChild(title);
 
     const meta = document.createElement("p");
     const metaParts: string[] = [];
 
-    if (recipe.category?.trim()) {
-        metaParts.push(recipe.category.trim());
-    }
-
-    if (recipe.difficulty?.trim()) {
-        metaParts.push(recipe.difficulty.trim());
-    }
-    if (recipe.timeEstimate?.trim()) {
-        metaParts.push(recipe.timeEstimate.trim());
+    for (const field of indexData.metadata) {
+        const value = item.fields[field]?.trim();
+        if (value) {
+            metaParts.push(value);
+        }
     }
 
     if (metaParts.length > 0) {
@@ -42,65 +47,17 @@ export function renderInlineRecipeDetail(container: HTMLElement, recipe: Recipe)
         detail.append(meta);
     }
 
-    if (recipe.introduction) {
-        const introduction = document.createElement("p");
-        introduction.textContent = recipe.introduction;
-        detail.appendChild(introduction);
-    }
+    for (const sectionName of indexData.sections) {
+        const sectionContent = item.sections[sectionName]?.trim();
+        if (!sectionContent) {
+            continue;
+        }
 
-    if (recipe.objective) {
-        const objectiveHeading = document.createElement("h4");
-        objectiveHeading.textContent = "Objective";
-        const objectiveText = document.createElement("p");
-        objectiveText.textContent = recipe.objective;
-        detail.append(objectiveHeading, objectiveText);
-    }
-
-    const ingredientsHeading = document.createElement("h4");
-    ingredientsHeading.textContent = "Ingredients";
-    const ingredientsBlock = document.createElement("div");
-    appendMultilineText(ingredientsBlock, recipe.ingredients);
-
-    let preparationHeading: HTMLElement | null = null;
-    let preparationBlock: HTMLElement | null = null;
-    if (recipe.preparation) {
-        preparationHeading = document.createElement("h4");
-        preparationHeading.textContent = "Preparation";
-        preparationBlock = document.createElement("div");
-        appendMultilineText(preparationBlock, recipe.preparation);
-    }
-
-    const executionHeading = document.createElement("h4");
-    executionHeading.textContent = "Execution";
-    const executionBlock = document.createElement("div");
-    appendMultilineText(executionBlock, recipe.execution);
-
-    detail.append(ingredientsHeading, ingredientsBlock);
-    if (preparationHeading && preparationBlock) {
-        detail.append(preparationHeading, preparationBlock);
-    }
-    detail.append(executionHeading, executionBlock);
-
-    if (recipe.reflection) {
-        const reflectionHeading = document.createElement("h4");
-        reflectionHeading.textContent = "Reflection";
-        const reflectionBlock = document.createElement("div");
-        appendMultilineText(reflectionBlock, recipe.reflection);
-        detail.append(reflectionHeading, reflectionBlock);
-    }
-
-    if (recipe.variation) {
-        const variationHeading = document.createElement("h4");
-        variationHeading.textContent = "Variation";
-        const variationBlock = document.createElement("div");
-        appendMultilineText(variationBlock, recipe.variation);
-        detail.append(variationHeading, variationBlock);
-    }
-
-    if (recipe.source) {
-        const source = document.createElement("p");
-        source.textContent = `Source: ${recipe.source}`;
-        detail.appendChild(source);
+        const sectionHeading = document.createElement("h4");
+        sectionHeading.textContent = toHeadingLabel(sectionName);
+        const sectionBlock = document.createElement("div");
+        appendMultilineText(sectionBlock, sectionContent);
+        detail.append(sectionHeading, sectionBlock);
     }
 
     container.appendChild(detail);

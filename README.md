@@ -15,13 +15,14 @@
    ```
 
 Frontend: `http://localhost:5002/`
-Recipe data: `http://localhost:5002/data/recipes.json`
+Index data: `http://localhost:5002/data/index.json`
 
-## Authoring Recipes
+## Authoring Content
 
-- Source files live in `content/recipes/*.md`.
-- Run `npm run build:recipes` to regenerate `wwwroot/data/recipes.json`.
-- `npm run build` runs both recipe generation and TypeScript compilation.
+- Collection config lives in `content/index.md`.
+- Source item files live in `content/items/*.md`.
+- Run `npm run build:index` to regenerate `wwwroot/data/index.json`.
+- `npm run build` runs both index generation and TypeScript compilation.
 
 ## GitHub Pages Deployment
 
@@ -29,8 +30,8 @@ Recipe data: `http://localhost:5002/data/recipes.json`
 - Trigger: run manually from the Actions tab (`workflow_dispatch`)
 - The workflow:
   - runs `npm ci`
-  - regenerates `wwwroot/data/recipes.json`
-  - commits `wwwroot/data/recipes.json` back to `main` only when changed
+  - regenerates `wwwroot/data/index.json`
+  - commits `wwwroot/data/index.json` back to `main` only when changed
   - runs `npm run build`
   - deploys `wwwroot` to GitHub Pages
 

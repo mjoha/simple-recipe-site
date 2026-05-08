@@ -1,7 +1,11 @@
-import type { Recipe } from "./types.js";
+import type { IndexData, IndexedItem } from "./types.js";
 
-export function getRecipeInitial(recipe: Recipe): string {
-    const trimmedTitle = recipe.title.trim();
+function getTitle(item: IndexedItem, titleField: string): string {
+    return (item.fields[titleField] ?? "").trim();
+}
+
+export function getItemInitial(item: IndexedItem, titleField: string): string {
+    const trimmedTitle = getTitle(item, titleField);
 
     if (trimmedTitle.length === 0) {
         return "#";
@@ -16,45 +20,40 @@ export function getRecipeInitial(recipe: Recipe): string {
     return "#";
 }
 
-export function matchesSearch(recipe: Recipe, searchQuery: string): boolean {
+export function matchesSearch(item: IndexedItem, indexData: IndexData, searchQuery: string): boolean {
     const normalizedQuery = searchQuery.trim().toLowerCase();
 
     if (normalizedQuery.length === 0) {
         return true;
     }
 
-    const searchableFields = [
-        recipe.title,
-        recipe.introduction ?? "",
-        recipe.objective ?? "",
-        recipe.category ?? "",
-        recipe.ingredients,
-        recipe.preparation ?? "",
-        recipe.execution,
-        recipe.reflection ?? "",
-        recipe.variation ?? "",
-        recipe.timeEstimate ?? "",
-        recipe.difficulty ?? "",
-        recipe.source ?? ""
-    ];
+    const searchableFields = indexData.searchFields.map((field) => {
+        const fromField = item.fields[field];
+        if (typeof fromField === "string") {
+            return fromField;
+        }
+
+        const fromSection = item.sections[field];
+        return typeof fromSection === "string" ? fromSection : "";
+    });
 
     return searchableFields.some((field) => field.toLowerCase().includes(normalizedQuery));
 }
 
-export function groupRecipesByInitial(recipes: Recipe[]): Map<string, Recipe[]> {
-    const recipesByInitial = new Map<string, Recipe[]>();
+export function groupItemsByInitial(items: IndexedItem[], titleField: string): Map<string, IndexedItem[]> {
+    const itemsByInitial = new Map<string, IndexedItem[]>();
 
-    for (const recipe of recipes) {
-        const initial = getRecipeInitial(recipe);
-        const existing = recipesByInitial.get(initial) ?? [];
-        existing.push(recipe);
-        recipesByInitial.set(initial, existing);
+    for (const item of items) {
+        const initial = getItemInitial(item, titleField);
+        const existing = itemsByInitial.get(initial) ?? [];
+        existing.push(item);
+        itemsByInitial.set(initial, existing);
     }
 
-    return recipesByInitial;
+    return itemsByInitial;
 }
 
-export function sortedInitialKeys(groups: Map<string, Recipe[]>): string[] {
+export function sortedInitialKeys(groups: Map<string, IndexedItem[]>): string[] {
     const initials = [...groups.keys()].sort((left, right) => left.localeCompare(right));
     const symbolIndex = initials.indexOf("#");
 

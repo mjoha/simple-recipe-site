@@ -1,16 +1,18 @@
-export type Recipe = {
+export type IndexedItem = {
     id: number;
+    fields: Record<string, string | null>;
+    sections: Record<string, string | null>;
+};
+
+export type IndexData = {
     title: string;
-    slug: string | null;
-    introduction: string | null;
-    objective: string | null;
-    ingredients: string;
-    preparation: string | null;
-    execution: string;
-    reflection: string | null;
-    variation: string | null;
-    category: string | null;
-    timeEstimate: string | null;
-    difficulty: string | null;
-    source: string | null;
+    itemName: string;
+    itemNamePlural: string;
+    description: string | null;
+    titleField: string;
+    slugField: string;
+    searchFields: string[];
+    sections: string[];
+    metadata: string[];
+    items: IndexedItem[];
 };

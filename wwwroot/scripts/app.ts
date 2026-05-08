@@ -1,9 +1,9 @@
-import { fetchRecipes } from "./api.js";
+import { fetchIndex } from "./api.js";
 import { getAppElements } from "./dom.js";
 import { matchesSearch } from "./filters.js";
-import { renderRecipeGroups } from "./renderList.js";
-import { clearRecipeUrl, onRecipeUrlChange, readSelectedRecipeId, replaceRecipeUrlWithIndex, writeRecipeUrl } from "./router.js";
-import type { Recipe } from "./types.js";
+import { renderItemGroups } from "./renderList.js";
+import { clearItemUrl, onItemUrlChange, readSelectedItemSlug, replaceItemUrlWithIndex, writeItemUrl } from "./router.js";
+import type { IndexData, IndexedItem } from "./types.js";
 
 const appElements = getAppElements();
 
@@ -12,114 +12,156 @@ if (!appElements) {
 }
 const elements = appElements;
 
-let allRecipes: Recipe[] = [];
+let indexData: IndexData | null = null;
+let allItems: IndexedItem[] = [];
 let currentSearchQuery = "";
-let expandedRecipeIds = new Set<number>();
+let expandedItemIds = new Set<number>();
 
 function renderIndexState(statusOverride?: string): void {
-    const filteredRecipes = allRecipes.filter((recipe) => matchesSearch(recipe, currentSearchQuery));
-    const filteredRecipeIds = new Set(filteredRecipes.map((recipe) => recipe.id));
-    expandedRecipeIds = new Set([...expandedRecipeIds].filter((recipeId) => filteredRecipeIds.has(recipeId)));
+    const currentIndexData = indexData;
+    if (!currentIndexData) {
+        return;
+    }
 
-    renderRecipeGroups({
+    const filteredItems = allItems.filter((item) => matchesSearch(item, currentIndexData, currentSearchQuery));
+    const filteredItemIds = new Set(filteredItems.map((item) => item.id));
+    expandedItemIds = new Set([...expandedItemIds].filter((itemId) => filteredItemIds.has(itemId)));
+
+    renderItemGroups({
         container: elements.recipeGroups,
         letterIndex: elements.letterIndex,
-        recipes: filteredRecipes,
-        expandedRecipeIds,
-        onToggleRecipe: (recipeId) => {
-            if (expandedRecipeIds.has(recipeId)) {
-                expandedRecipeIds.delete(recipeId);
-                if (readSelectedRecipeId() === recipeId) {
-                    clearRecipeUrl();
+        indexData: currentIndexData,
+        items: filteredItems,
+        expandedItemIds,
+        onToggleItem: (itemId) => {
+            const item = allItems.find((candidate) => candidate.id === itemId);
+            if (!item) {
+                return;
+            }
+
+            const itemSlug = item.fields[currentIndexData.slugField];
+            if (!itemSlug) {
+                return;
+            }
+
+            if (expandedItemIds.has(itemId)) {
+                expandedItemIds.delete(itemId);
+                if (readSelectedItemSlug() === itemSlug) {
+                    clearItemUrl();
                 }
                 renderIndexState();
                 return;
             }
 
-            expandedRecipeIds.add(recipeId);
-            writeRecipeUrl(recipeId);
+            expandedItemIds.add(itemId);
+            writeItemUrl(itemSlug);
             renderIndexState();
         }
     });
 
     if (statusOverride) {
-        elements.emptyState.hidden = filteredRecipes.length !== 0;
+        elements.emptyState.hidden = filteredItems.length !== 0;
         elements.status.textContent = statusOverride;
-    } else if (filteredRecipes.length === 0) {
+    } else if (filteredItems.length === 0) {
         elements.emptyState.hidden = false;
         elements.status.textContent = "";
     } else {
         elements.emptyState.hidden = true;
-        elements.status.textContent = `${filteredRecipes.length} recipe${filteredRecipes.length === 1 ? "" : "s"} found`;
+        elements.status.textContent = `${filteredItems.length} ${currentIndexData.itemName.toLowerCase()}${filteredItems.length === 1 ? "" : "s"} found`;
     }
 
     elements.recipeListView.hidden = false;
     elements.searchInput.hidden = false;
 }
 
-function scrollToRecipe(recipeId: number): void {
+function scrollToItem(itemId: number): void {
     requestAnimationFrame(() => {
-        document.getElementById(`recipe-${recipeId}`)?.scrollIntoView({ block: "start" });
+        document.getElementById(`item-${itemId}`)?.scrollIntoView({ block: "start" });
     });
 }
 
-function renderFromUrl(options: { scrollToRecipe: boolean } = { scrollToRecipe: false }): void {
-    const selectedRecipeId = readSelectedRecipeId();
+function renderFromUrl(options: { scrollToItem: boolean } = { scrollToItem: false }): void {
+    const currentIndexData = indexData;
+    if (!currentIndexData) {
+        return;
+    }
+    const selectedItemSlug = readSelectedItemSlug();
 
-    if (selectedRecipeId === null) {
-        expandedRecipeIds = new Set();
+    if (selectedItemSlug === null) {
+        expandedItemIds = new Set();
         renderIndexState();
         return;
     }
 
-    const selectedRecipe = allRecipes.find((recipe) => recipe.id === selectedRecipeId);
+    const selectedItem = allItems.find((item) => item.fields[currentIndexData.slugField] === selectedItemSlug);
 
-    if (!selectedRecipe) {
-        replaceRecipeUrlWithIndex();
-        expandedRecipeIds = new Set();
-        renderIndexState("Recipe not found.");
+    if (!selectedItem) {
+        replaceItemUrlWithIndex();
+        expandedItemIds = new Set();
+        renderIndexState(`${currentIndexData.itemName} not found.`);
         return;
     }
 
-    expandedRecipeIds = new Set([selectedRecipe.id]);
+    expandedItemIds = new Set([selectedItem.id]);
     renderIndexState();
 
-    if (options.scrollToRecipe) {
-        scrollToRecipe(selectedRecipe.id);
+    if (options.scrollToItem) {
+        scrollToItem(selectedItem.id);
     }
 }
 
-async function loadRecipes(): Promise<void> {
-    elements.status.textContent = "Loading recipes...";
+async function loadIndex(): Promise<void> {
+    elements.status.textContent = "Loading index...";
 
     try {
-        allRecipes = await fetchRecipes();
+        indexData = await fetchIndex();
+        allItems = indexData.items;
         currentSearchQuery = "";
         elements.searchInput.value = "";
 
-        if (allRecipes.length === 0) {
-            elements.status.textContent = "No recipes found.";
+        const pageTitle = indexData.title.trim();
+        if (pageTitle.length > 0) {
+            document.title = pageTitle;
+            const headingElement = document.querySelector("h1");
+            if (headingElement) {
+                headingElement.textContent = pageTitle;
+            }
+        }
+        elements.searchInput.placeholder = `Search ${indexData.itemNamePlural.toLowerCase()}...`;
+        elements.emptyState.textContent = `No ${indexData.itemNamePlural.toLowerCase()} match your search.`;
+
+        if (allItems.length === 0) {
+            elements.status.textContent = `No ${indexData.itemNamePlural.toLowerCase()} found.`;
             return;
         }
 
         elements.searchInput.addEventListener("input", () => {
+            const currentIndexData = indexData;
+            if (!currentIndexData) {
+                return;
+            }
             currentSearchQuery = elements.searchInput.value;
-            const selectedRecipeId = readSelectedRecipeId();
-            if (selectedRecipeId !== null && !allRecipes.some((recipe) => recipe.id === selectedRecipeId && matchesSearch(recipe, currentSearchQuery))) {
-                clearRecipeUrl();
+            const selectedItemSlug = readSelectedItemSlug();
+            if (
+                selectedItemSlug !== null &&
+                !allItems.some(
+                    (item) => item.fields[currentIndexData.slugField] === selectedItemSlug && matchesSearch(item, currentIndexData, currentSearchQuery)
+                )
+            ) {
+                clearItemUrl();
             }
 
             renderIndexState();
         });
 
-        onRecipeUrlChange(() => {
+        onItemUrlChange(() => {
             renderFromUrl();
         });
 
-        renderFromUrl({ scrollToRecipe: readSelectedRecipeId() !== null });
+        renderFromUrl({ scrollToItem: readSelectedItemSlug() !== null });
     } catch {
-        elements.status.textContent = "Could not load recipes.";
+        elements.status.textContent = "Could not load index data.";
     }
 }
 
-void loadRecipes();
+void loadIndex();

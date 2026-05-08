@@ -1,44 +1,38 @@
-const RECIPE_HASH_PREFIX = "#/recipes/";
+const ITEM_HASH_PREFIX = "#/items/";
 
-export function parseRecipeIdFromHash(hash: string): number | null {
+export function parseItemSlugFromHash(hash: string): string | null {
     if (hash.length === 0 || hash === "#") {
         return null;
     }
 
-    if (!hash.startsWith(RECIPE_HASH_PREFIX)) {
+    if (!hash.startsWith(ITEM_HASH_PREFIX)) {
         return null;
     }
 
-    const idPart = hash.slice(RECIPE_HASH_PREFIX.length);
-    if (!/^\d+$/.test(idPart)) {
+    const slug = hash.slice(ITEM_HASH_PREFIX.length).trim();
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/i.test(slug)) {
         return null;
     }
 
-    const parsed = Number.parseInt(idPart, 10);
-
-    if (!Number.isInteger(parsed) || parsed <= 0) {
-        return null;
-    }
-
-    return parsed;
+    return slug;
 }
 
-export function readSelectedRecipeId(): number | null {
-    return parseRecipeIdFromHash(window.location.hash);
+export function readSelectedItemSlug(): string | null {
+    return parseItemSlugFromHash(window.location.hash);
 }
 
-export function writeRecipeUrl(id: number): void {
-    history.pushState({ recipeId: id }, "", `${RECIPE_HASH_PREFIX}${id}`);
+export function writeItemUrl(slug: string): void {
+    history.pushState({ itemSlug: slug }, "", `${ITEM_HASH_PREFIX}${slug}`);
 }
 
-export function clearRecipeUrl(): void {
-    history.pushState({ recipeId: null }, "", `${location.pathname}${location.search}`);
+export function clearItemUrl(): void {
+    history.pushState({ itemSlug: null }, "", `${location.pathname}${location.search}`);
 }
 
-export function replaceRecipeUrlWithIndex(): void {
-    history.replaceState({ recipeId: null }, "", `${location.pathname}${location.search}`);
+export function replaceItemUrlWithIndex(): void {
+    history.replaceState({ itemSlug: null }, "", `${location.pathname}${location.search}`);
 }
 
-export function onRecipeUrlChange(handler: () => void): void {
+export function onItemUrlChange(handler: () => void): void {
     window.addEventListener("popstate", handler);
 }

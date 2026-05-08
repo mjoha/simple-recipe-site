@@ -23,7 +23,7 @@
 
 Current architecture has no runtime API.
 
-- Frontend should fetch generated static data from `/data/recipes.json`.
+- Frontend should fetch generated static data from `/data/index.json`.
 - Do not add controllers/endpoints unless a feature explicitly reintroduces backend runtime.
 
 ---
@@ -32,8 +32,8 @@ Current architecture has no runtime API.
 
 Current architecture has no runtime database.
 
-- Markdown files in `content/recipes` are source of truth.
-- Generated JSON in `wwwroot/data/recipes.json` is runtime data.
+- Markdown config/item files in `content/` are source of truth.
+- Generated JSON in `wwwroot/data/index.json` is runtime data.
 - Do not add database dependencies unless explicitly required by a future feature.
 
 ---
