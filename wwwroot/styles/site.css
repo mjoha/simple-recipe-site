@@ -69,8 +69,7 @@ input[type="search"]:focus-visible {
     border-color: var(--color-focus);
 }
 
-#status {
-    min-height: 1.4rem;
+#empty-state {
     margin: var(--space-3) 0 var(--space-2);
     color: var(--color-muted);
     font-size: 0.96rem;
@@ -100,6 +99,14 @@ input[type="search"]:focus-visible {
     color: var(--color-accent-hover);
     border-color: var(--color-border);
     background: rgba(107, 83, 51, 0.06);
+}
+
+.letter-index-button-disabled {
+    color: var(--color-disabled);
+    cursor: default;
+    border-color: transparent;
+    background: transparent;
+    pointer-events: none;
 }
 
 .letter-index-button:focus-visible {

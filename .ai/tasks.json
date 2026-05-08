@@ -71,6 +71,12 @@
       "title": "Generate static HTML",
       "status": "done",
       "spec": ".ai/features/012-generate-static-html.md"
+    },
+    {
+      "id": "013-static-search-and-letter-nav",
+      "title": "Static search and full letter navigation",
+      "status": "done",
+      "spec": ".ai/features/013-static-search-and-letter-nav.md"
     }
   ],
   "decisions": []

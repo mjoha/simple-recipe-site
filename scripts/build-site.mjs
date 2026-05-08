@@ -111,7 +111,34 @@ function toMultilineParagraphs(text) {
         .map((line) => line.trim())
         .filter((line) => line.length > 0)
         .map((line) => `<p class="text-block-line">${escapeHtml(line)}</p>`)
-        .join("");
+        .join("\n");
+}
+
+function indentLines(text, spaces) {
+    const prefix = " ".repeat(spaces);
+    return text
+        .split("\n")
+        .map((line) => (line.length > 0 ? `${prefix}${line}` : line))
+        .join("\n");
+}
+
+function buildSearchText(item, config) {
+    const values = [];
+
+    for (const fieldName of config.searchFields) {
+        const fieldValue = item.fields[fieldName];
+        if (typeof fieldValue === "string" && fieldValue.trim().length > 0) {
+            values.push(fieldValue.trim());
+            continue;
+        }
+
+        const sectionValue = item.sections[fieldName];
+        if (typeof sectionValue === "string" && sectionValue.trim().length > 0) {
+            values.push(sectionValue.trim());
+        }
+    }
+
+    return values.join(" ").replace(/\s+/g, " ").trim().toLowerCase();
 }
 
 function itemHasRequiredField(item, fieldName) {
@@ -127,11 +154,11 @@ function itemHasRequiredField(item, fieldName) {
 function buildItemMarkup(item, config) {
     const title = item.fields[config.titleField] ?? "";
     const slug = item.fields[config.slugField] ?? "";
+    const searchText = buildSearchText(item, config);
     const metadataValues = config.metadata
         .map((field) => item.fields[field]?.trim() ?? "")
         .filter((value) => value.length > 0);
-    const metadataMarkup =
-        metadataValues.length > 0 ? `<p>${metadataValues.map((value) => escapeHtml(value)).join(" · ")}</p>` : "";
+    const metadataMarkup = metadataValues.length > 0 ? `<p>${metadataValues.map((value) => escapeHtml(value)).join(" · ")}</p>` : "";
 
     const sectionsMarkup = config.sections
         .map((sectionName) => {
@@ -141,13 +168,30 @@ function buildItemMarkup(item, config) {
             }
 
             const label = toHeadingLabel(sectionName);
-            return `<h4>${escapeHtml(label)}</h4><div>${toMultilineParagraphs(content)}</div>`;
+            return [
+                `<h4>${escapeHtml(label)}</h4>`,
+                "<div>",
+                indentLines(toMultilineParagraphs(content), 4),
+                "</div>"
+            ].join("\n");
         })
-        .join("");
+        .filter((section) => section.length > 0)
+        .join("\n");
 
-    return `<li class="recipe-list-item" id="${escapeHtml(slug)}"><details class="catalog-item"><summary class="recipe-button"><h3 class="recipe-title">${escapeHtml(
-        title
-    )}</h3></summary><div class="recipe-inline-detail">${metadataMarkup}${sectionsMarkup}</div></details></li>`;
+    const detailChildren = indentLines([metadataMarkup, sectionsMarkup].filter((value) => value.length > 0).join("\n"), 8);
+
+    return [
+        `<li class="recipe-list-item" id="${escapeHtml(slug)}" data-catalog-item data-search="${escapeHtml(searchText)}">`,
+        "    <details class=\"catalog-item\">",
+        "        <summary class=\"recipe-button\">",
+        `            <h3 class="recipe-title">${escapeHtml(title)}</h3>`,
+        "        </summary>",
+        "        <div class=\"recipe-inline-detail\">",
+        detailChildren,
+        "        </div>",
+        "    </details>",
+        "</li>"
+    ].join("\n");
 }
 
 function groupByInitial(items, titleField) {
@@ -173,6 +217,7 @@ async function buildSite() {
     const titleField = readRequiredConfigField(config, "titleField");
     const slugField = readRequiredConfigField(config, "slugField");
     const requiredFields = parseCsvList(config.requiredFields);
+    const searchFields = parseCsvList(config.searchFields);
     const sections = parseCsvList(config.sections);
     const metadata = parseCsvList(config.metadata);
 
@@ -205,21 +250,38 @@ async function buildSite() {
 
     items.sort((left, right) => (left.fields[titleField] ?? "").localeCompare(right.fields[titleField] ?? ""));
     const grouped = groupByInitial(items, titleField);
-    const initials = [...grouped.keys()].sort((left, right) => left.localeCompare(right));
+    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+    const availableLetters = new Set(alphabet.filter((letter) => grouped.has(letter)));
 
-    const indexNav = initials
-        .map((initial) => `<a class="letter-index-button" href="#letter-${encodeURIComponent(initial)}">${escapeHtml(initial)}</a>`)
-        .join("");
+    const indexNav = alphabet
+        .map((letter) => {
+            if (!availableLetters.has(letter)) {
+                return `            <span class="letter-index-button letter-index-button-disabled" aria-disabled="true" data-letter="${letter}">${letter}</span>`;
+            }
 
-    const groupsMarkup = initials
-        .map((initial) => {
-            const itemsForInitial = grouped.get(initial) ?? [];
-            const itemMarkup = itemsForInitial.map((item) => buildItemMarkup(item, { titleField, slugField, metadata, sections })).join("");
-            return `<section class="category-section" id="letter-${encodeURIComponent(initial)}"><h2>${escapeHtml(initial)}</h2><ul class="recipe-list">${itemMarkup}</ul></section>`;
+            return `            <a class="letter-index-button" href="#letter-${letter}" data-letter="${letter}">${letter}</a>`;
         })
-        .join("");
+        .join("\n");
 
-    const descriptionMarkup = description.length > 0 ? `<p>${escapeHtml(description)}</p>` : "";
+    const groupsMarkup = alphabet
+        .filter((letter) => availableLetters.has(letter))
+        .map((letter) => {
+            const itemsForInitial = grouped.get(letter) ?? [];
+            const itemMarkup = itemsForInitial
+                .map((item) => buildItemMarkup(item, { titleField, slugField, metadata, sections, searchFields }))
+                .join("\n");
+            return [
+                `                <section class="category-section" id="letter-${letter}" data-letter-section="${letter}">`,
+                `                    <h2>${letter}</h2>`,
+                "                    <ul class=\"recipe-list\">",
+                indentLines(itemMarkup, 24),
+                "                    </ul>",
+                "                </section>"
+            ].join("\n");
+        })
+        .join("\n");
+
+    const descriptionMarkup = description.length > 0 ? `        <p>${escapeHtml(description)}</p>\n` : "";
 
     const html = `<!doctype html>
 <html lang="en">
@@ -228,15 +290,21 @@ async function buildSite() {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>${escapeHtml(title)}</title>
     <link rel="stylesheet" href="./styles/site.css">
+    <script src="./scripts/search.js" defer></script>
 </head>
 <body>
     <main>
         <h1>${escapeHtml(title)}</h1>
-        ${descriptionMarkup}
-        <p id="status">${items.length} ${escapeHtml(itemNamePlural.toLowerCase())}</p>
-        <nav id="letter-index" aria-label="Catalog index">${indexNav}</nav>
+${descriptionMarkup}        <label for="search-input" class="search-label">Search</label>
+        <input id="search-input" type="search" autocomplete="off" placeholder="Search ${escapeHtml(itemNamePlural.toLowerCase())}...">
+        <p id="empty-state" hidden>No ${escapeHtml(itemNamePlural.toLowerCase())} match your search.</p>
+        <nav id="letter-index" aria-label="Catalog index">
+${indexNav}
+        </nav>
         <section id="recipe-list-view">
-            <div id="recipe-groups">${groupsMarkup}</div>
+            <div id="recipe-groups">
+${groupsMarkup}
+            </div>
         </section>
     </main>
 </body>

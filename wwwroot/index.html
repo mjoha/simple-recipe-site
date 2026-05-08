@@ -3,17 +3,191 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Catalog</title>
+    <title>Recipes</title>
     <link rel="stylesheet" href="./styles/site.css">
+    <script src="./scripts/search.js" defer></script>
 </head>
 <body>
     <main>
-        <h1>Catalog</h1>
-        <p>An authored index of field-guide entries.</p>
-        <p id="status">3 entries</p>
-        <nav id="letter-index" aria-label="Catalog index"><a class="letter-index-button" href="#letter-D">D</a><a class="letter-index-button" href="#letter-S">S</a><a class="letter-index-button" href="#letter-T">T</a></nav>
+        <h1>Recipes</h1>
+        <p>An authored index of cooking field-guide entries.</p>
+        <label for="search-input" class="search-label">Search</label>
+        <input id="search-input" type="search" autocomplete="off" placeholder="Search recipes...">
+        <p id="empty-state" hidden>No recipes match your search.</p>
+        <nav id="letter-index" aria-label="Catalog index">
+            <span class="letter-index-button letter-index-button-disabled" aria-disabled="true" data-letter="A">A</span>
+            <span class="letter-index-button letter-index-button-disabled" aria-disabled="true" data-letter="B">B</span>
+            <span class="letter-index-button letter-index-button-disabled" aria-disabled="true" data-letter="C">C</span>
+            <a class="letter-index-button" href="#letter-D" data-letter="D">D</a>
+            <span class="letter-index-button letter-index-button-disabled" aria-disabled="true" data-letter="E">E</span>
+            <span class="letter-index-button letter-index-button-disabled" aria-disabled="true" data-letter="F">F</span>
+            <span class="letter-index-button letter-index-button-disabled" aria-disabled="true" data-letter="G">G</span>
+            <span class="letter-index-button letter-index-button-disabled" aria-disabled="true" data-letter="H">H</span>
+            <span class="letter-index-button letter-index-button-disabled" aria-disabled="true" data-letter="I">I</span>
+            <span class="letter-index-button letter-index-button-disabled" aria-disabled="true" data-letter="J">J</span>
+            <span class="letter-index-button letter-index-button-disabled" aria-disabled="true" data-letter="K">K</span>
+            <span class="letter-index-button letter-index-button-disabled" aria-disabled="true" data-letter="L">L</span>
+            <span class="letter-index-button letter-index-button-disabled" aria-disabled="true" data-letter="M">M</span>
+            <span class="letter-index-button letter-index-button-disabled" aria-disabled="true" data-letter="N">N</span>
+            <span class="letter-index-button letter-index-button-disabled" aria-disabled="true" data-letter="O">O</span>
+            <span class="letter-index-button letter-index-button-disabled" aria-disabled="true" data-letter="P">P</span>
+            <span class="letter-index-button letter-index-button-disabled" aria-disabled="true" data-letter="Q">Q</span>
+            <span class="letter-index-button letter-index-button-disabled" aria-disabled="true" data-letter="R">R</span>
+            <a class="letter-index-button" href="#letter-S" data-letter="S">S</a>
+            <a class="letter-index-button" href="#letter-T" data-letter="T">T</a>
+            <span class="letter-index-button letter-index-button-disabled" aria-disabled="true" data-letter="U">U</span>
+            <span class="letter-index-button letter-index-button-disabled" aria-disabled="true" data-letter="V">V</span>
+            <span class="letter-index-button letter-index-button-disabled" aria-disabled="true" data-letter="W">W</span>
+            <span class="letter-index-button letter-index-button-disabled" aria-disabled="true" data-letter="X">X</span>
+            <span class="letter-index-button letter-index-button-disabled" aria-disabled="true" data-letter="Y">Y</span>
+            <span class="letter-index-button letter-index-button-disabled" aria-disabled="true" data-letter="Z">Z</span>
+        </nav>
         <section id="recipe-list-view">
-            <div id="recipe-groups"><section class="category-section" id="letter-D"><h2>D</h2><ul class="recipe-list"><li class="recipe-list-item" id="derp-soup"><details class="catalog-item"><summary class="recipe-button"><h3 class="recipe-title">Derp Soup</h3></summary><div class="recipe-inline-detail"><p>Soup · Beginner · 35 minutes · Family notebook</p><h4>Introduction</h4><div><p class="text-block-line">Derp soup should be bright and comforting at the same time, not thin or sugary.</p></div><h4>Objective</h4><div><p class="text-block-line">A balanced bowl with body, acidity, and warmth.</p></div><h4>Ingredients</h4><div><p class="text-block-line">Onion, garlic, canned tomatoes, olive oil, stock or water, and salt.</p></div><h4>Preparation</h4><div><p class="text-block-line">Slice onion and garlic before heating the pot. Keep extra stock nearby to adjust consistency.</p></div><h4>Execution</h4><div><p class="text-block-line">Cook onion gently in olive oil until soft.</p><p class="text-block-line">Add garlic briefly.</p><p class="text-block-line">Add tomatoes and stock, then simmer until integrated.</p><p class="text-block-line">Blend to your preferred texture.</p><p class="text-block-line">Season in small steps.</p></div><h4>Reflection</h4><div><p class="text-block-line">If flavor feels flat, it usually needs salt first. If still dull, add a little acidity. If sharp, simmer longer.</p></div><h4>Variation</h4><div><p class="text-block-line">Finish with cream for a softer profile, or chili flakes for heat.</p></div></div></details></li></ul></section><section class="category-section" id="letter-S"><h2>S</h2><ul class="recipe-list"><li class="recipe-list-item" id="scrambled-eggs"><details class="catalog-item"><summary class="recipe-button"><h3 class="recipe-title">Scrambled Eggs</h3></summary><div class="recipe-inline-detail"><p>Eggs · Gentle but unforgiving · 10 minutes</p><h4>Introduction</h4><div><p class="text-block-line">Bad scrambled eggs are rubber and regret. Good scrambled eggs feel almost unfairly luxurious for such a short recipe.</p></div><h4>Objective</h4><div><p class="text-block-line">A soft, creamy scramble that still tastes cleanly of egg.</p></div><h4>Ingredients</h4><div><p class="text-block-line">Eggs, butter, and fine salt.</p></div><h4>Preparation</h4><div><p class="text-block-line">Use a small saucepan and a flexible spatula. Keep salt beside the stove. Crack eggs into a bowl and beat until uniform.</p></div><h4>Execution</h4><div><p class="text-block-line">Melt butter over gentle heat.</p><p class="text-block-line">Add eggs and stir slowly, sweeping the bottom constantly.</p><p class="text-block-line">Pull the pan off heat before the eggs look fully done.</p><p class="text-block-line">Let residual heat finish the texture.</p><p class="text-block-line">Taste, then salt.</p></div><h4>Reflection</h4><div><p class="text-block-line">Most misses come from too much heat or too much confidence. If eggs seize, lower heat next time. If they dry out, stop earlier.</p></div><h4>Variation</h4><div><p class="text-block-line">Better eggs improve everything.</p><p class="text-block-line">A spoon of creme fraiche adds extra silk.</p><p class="text-block-line">Chives and black pepper are optional finishing notes.</p></div></div></details></li></ul></section><section class="category-section" id="letter-T"><h2>T</h2><ul class="recipe-list"><li class="recipe-list-item" id="tomato-soup"><details class="catalog-item"><summary class="recipe-button"><h3 class="recipe-title">Tomato Soup</h3></summary><div class="recipe-inline-detail"><p>Soup · Beginner · 35 minutes · Family notebook</p><h4>Introduction</h4><div><p class="text-block-line">Tomato soup should be bright and comforting at the same time, not thin or sugary.</p></div><h4>Objective</h4><div><p class="text-block-line">A balanced bowl with body, acidity, and warmth.</p></div><h4>Ingredients</h4><div><p class="text-block-line">Onion, garlic, canned tomatoes, olive oil, stock or water, and salt.</p></div><h4>Preparation</h4><div><p class="text-block-line">Slice onion and garlic before heating the pot. Keep extra stock nearby to adjust consistency.</p></div><h4>Execution</h4><div><p class="text-block-line">Cook onion gently in olive oil until soft.</p><p class="text-block-line">Add garlic briefly.</p><p class="text-block-line">Add tomatoes and stock, then simmer until integrated.</p><p class="text-block-line">Blend to your preferred texture.</p><p class="text-block-line">Season in small steps.</p></div><h4>Reflection</h4><div><p class="text-block-line">If flavor feels flat, it usually needs salt first. If still dull, add a little acidity. If sharp, simmer longer.</p></div><h4>Variation</h4><div><p class="text-block-line">Finish with cream for a softer profile, or chili flakes for heat.</p></div></div></details></li></ul></section></div>
+            <div id="recipe-groups">
+                <section class="category-section" id="letter-D" data-letter-section="D">
+                    <h2>D</h2>
+                    <ul class="recipe-list">
+                        <li class="recipe-list-item" id="derp-soup" data-catalog-item data-search="derp soup derp soup should be bright and comforting at the same time, not thin or sugary. a balanced bowl with body, acidity, and warmth. onion, garlic, canned tomatoes, olive oil, stock or water, and salt. slice onion and garlic before heating the pot. keep extra stock nearby to adjust consistency. cook onion gently in olive oil until soft. add garlic briefly. add tomatoes and stock, then simmer until integrated. blend to your preferred texture. season in small steps. if flavor feels flat, it usually needs salt first. if still dull, add a little acidity. if sharp, simmer longer. finish with cream for a softer profile, or chili flakes for heat. soup beginner 35 minutes family notebook">
+                            <details class="catalog-item">
+                                <summary class="recipe-button">
+                                    <h3 class="recipe-title">Derp Soup</h3>
+                                </summary>
+                                <div class="recipe-inline-detail">
+                                <p>Soup · Beginner · 35 minutes · Family notebook</p>
+                                <h4>Introduction</h4>
+                                <div>
+                                    <p class="text-block-line">Derp soup should be bright and comforting at the same time, not thin or sugary.</p>
+                                </div>
+                                <h4>Objective</h4>
+                                <div>
+                                    <p class="text-block-line">A balanced bowl with body, acidity, and warmth.</p>
+                                </div>
+                                <h4>Ingredients</h4>
+                                <div>
+                                    <p class="text-block-line">Onion, garlic, canned tomatoes, olive oil, stock or water, and salt.</p>
+                                </div>
+                                <h4>Preparation</h4>
+                                <div>
+                                    <p class="text-block-line">Slice onion and garlic before heating the pot. Keep extra stock nearby to adjust consistency.</p>
+                                </div>
+                                <h4>Execution</h4>
+                                <div>
+                                    <p class="text-block-line">Cook onion gently in olive oil until soft.</p>
+                                    <p class="text-block-line">Add garlic briefly.</p>
+                                    <p class="text-block-line">Add tomatoes and stock, then simmer until integrated.</p>
+                                    <p class="text-block-line">Blend to your preferred texture.</p>
+                                    <p class="text-block-line">Season in small steps.</p>
+                                </div>
+                                <h4>Reflection</h4>
+                                <div>
+                                    <p class="text-block-line">If flavor feels flat, it usually needs salt first. If still dull, add a little acidity. If sharp, simmer longer.</p>
+                                </div>
+                                <h4>Variation</h4>
+                                <div>
+                                    <p class="text-block-line">Finish with cream for a softer profile, or chili flakes for heat.</p>
+                                </div>
+                                </div>
+                            </details>
+                        </li>
+                    </ul>
+                </section>
+                <section class="category-section" id="letter-S" data-letter-section="S">
+                    <h2>S</h2>
+                    <ul class="recipe-list">
+                        <li class="recipe-list-item" id="scrambled-eggs" data-catalog-item data-search="scrambled eggs bad scrambled eggs are rubber and regret. good scrambled eggs feel almost unfairly luxurious for such a short recipe. a soft, creamy scramble that still tastes cleanly of egg. eggs, butter, and fine salt. use a small saucepan and a flexible spatula. keep salt beside the stove. crack eggs into a bowl and beat until uniform. melt butter over gentle heat. add eggs and stir slowly, sweeping the bottom constantly. pull the pan off heat before the eggs look fully done. let residual heat finish the texture. taste, then salt. most misses come from too much heat or too much confidence. if eggs seize, lower heat next time. if they dry out, stop earlier. better eggs improve everything. a spoon of creme fraiche adds extra silk. chives and black pepper are optional finishing notes. eggs gentle but unforgiving 10 minutes">
+                            <details class="catalog-item">
+                                <summary class="recipe-button">
+                                    <h3 class="recipe-title">Scrambled Eggs</h3>
+                                </summary>
+                                <div class="recipe-inline-detail">
+                                <p>Eggs · Gentle but unforgiving · 10 minutes</p>
+                                <h4>Introduction</h4>
+                                <div>
+                                    <p class="text-block-line">Bad scrambled eggs are rubber and regret. Good scrambled eggs feel almost unfairly luxurious for such a short recipe.</p>
+                                </div>
+                                <h4>Objective</h4>
+                                <div>
+                                    <p class="text-block-line">A soft, creamy scramble that still tastes cleanly of egg.</p>
+                                </div>
+                                <h4>Ingredients</h4>
+                                <div>
+                                    <p class="text-block-line">Eggs, butter, and fine salt.</p>
+                                </div>
+                                <h4>Preparation</h4>
+                                <div>
+                                    <p class="text-block-line">Use a small saucepan and a flexible spatula. Keep salt beside the stove. Crack eggs into a bowl and beat until uniform.</p>
+                                </div>
+                                <h4>Execution</h4>
+                                <div>
+                                    <p class="text-block-line">Melt butter over gentle heat.</p>
+                                    <p class="text-block-line">Add eggs and stir slowly, sweeping the bottom constantly.</p>
+                                    <p class="text-block-line">Pull the pan off heat before the eggs look fully done.</p>
+                                    <p class="text-block-line">Let residual heat finish the texture.</p>
+                                    <p class="text-block-line">Taste, then salt.</p>
+                                </div>
+                                <h4>Reflection</h4>
+                                <div>
+                                    <p class="text-block-line">Most misses come from too much heat or too much confidence. If eggs seize, lower heat next time. If they dry out, stop earlier.</p>
+                                </div>
+                                <h4>Variation</h4>
+                                <div>
+                                    <p class="text-block-line">Better eggs improve everything.</p>
+                                    <p class="text-block-line">A spoon of creme fraiche adds extra silk.</p>
+                                    <p class="text-block-line">Chives and black pepper are optional finishing notes.</p>
+                                </div>
+                                </div>
+                            </details>
+                        </li>
+                    </ul>
+                </section>
+                <section class="category-section" id="letter-T" data-letter-section="T">
+                    <h2>T</h2>
+                    <ul class="recipe-list">
+                        <li class="recipe-list-item" id="tomato-soup" data-catalog-item data-search="tomato soup tomato soup should be bright and comforting at the same time, not thin or sugary. a balanced bowl with body, acidity, and warmth. onion, garlic, canned tomatoes, olive oil, stock or water, and salt. slice onion and garlic before heating the pot. keep extra stock nearby to adjust consistency. cook onion gently in olive oil until soft. add garlic briefly. add tomatoes and stock, then simmer until integrated. blend to your preferred texture. season in small steps. if flavor feels flat, it usually needs salt first. if still dull, add a little acidity. if sharp, simmer longer. finish with cream for a softer profile, or chili flakes for heat. soup beginner 35 minutes family notebook">
+                            <details class="catalog-item">
+                                <summary class="recipe-button">
+                                    <h3 class="recipe-title">Tomato Soup</h3>
+                                </summary>
+                                <div class="recipe-inline-detail">
+                                <p>Soup · Beginner · 35 minutes · Family notebook</p>
+                                <h4>Introduction</h4>
+                                <div>
+                                    <p class="text-block-line">Tomato soup should be bright and comforting at the same time, not thin or sugary.</p>
+                                </div>
+                                <h4>Objective</h4>
+                                <div>
+                                    <p class="text-block-line">A balanced bowl with body, acidity, and warmth.</p>
+                                </div>
+                                <h4>Ingredients</h4>
+                                <div>
+                                    <p class="text-block-line">Onion, garlic, canned tomatoes, olive oil, stock or water, and salt.</p>
+                                </div>
+                                <h4>Preparation</h4>
+                                <div>
+                                    <p class="text-block-line">Slice onion and garlic before heating the pot. Keep extra stock nearby to adjust consistency.</p>
+                                </div>
+                                <h4>Execution</h4>
+                                <div>
+                                    <p class="text-block-line">Cook onion gently in olive oil until soft.</p>
+                                    <p class="text-block-line">Add garlic briefly.</p>
+                                    <p class="text-block-line">Add tomatoes and stock, then simmer until integrated.</p>
+                                    <p class="text-block-line">Blend to your preferred texture.</p>
+                                    <p class="text-block-line">Season in small steps.</p>
+                                </div>
+                                <h4>Reflection</h4>
+                                <div>
+                                    <p class="text-block-line">If flavor feels flat, it usually needs salt first. If still dull, add a little acidity. If sharp, simmer longer.</p>
+                                </div>
+                                <h4>Variation</h4>
+                                <div>
+                                    <p class="text-block-line">Finish with cream for a softer profile, or chili flakes for heat.</p>
+                                </div>
+                                </div>
+                            </details>
+                        </li>
+                    </ul>
+                </section>
+            </div>
         </section>
     </main>
 </body>

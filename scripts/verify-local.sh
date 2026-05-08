@@ -27,12 +27,20 @@ for _ in {1..30}; do
       echo "Generated index.html is missing."
       exit 1
     fi
-    if ! node -e 'const fs=require("node:fs");const html=fs.readFileSync("wwwroot/index.html","utf8");if(!html.includes("<details")||!html.includes("letter-")){process.exit(1);}'; then
+    if ! node -e 'const fs=require("node:fs");const html=fs.readFileSync("wwwroot/index.html","utf8");if(!html.includes("<details")||!html.includes("id=\"search-input\"")||html.includes("id=\"status\"")){process.exit(1);}'; then
       echo "Generated index.html does not contain expected catalog markup."
+      exit 1
+    fi
+    if ! node -e 'const fs=require("node:fs");const html=fs.readFileSync("wwwroot/index.html","utf8");const count=(html.match(/data-letter=\"[A-Z]\"/g)||[]).length;if(count!==26){process.exit(1);}'; then
+      echo "Generated index.html does not contain full A-Z letter navigation."
       exit 1
     fi
     if ! [ -f "wwwroot/styles/site.css" ]; then
       echo "Site stylesheet is missing."
+      exit 1
+    fi
+    if ! [ -f "wwwroot/scripts/search.js" ]; then
+      echo "Search enhancement script is missing."
       exit 1
     fi
     echo "Local verification passed."
