@@ -37,7 +37,7 @@ An entry should include:
 - Title
 - Slug
 - Optional metadata fields
-- Authored section content
+- Authored section content (including optional inline images in expanded bodies via Markdown)
 
 Avoid over-designing schema features early. Keep frontmatter and section rules simple and evolve only with clear usage.
 

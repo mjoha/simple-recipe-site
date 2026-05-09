@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -12,10 +13,15 @@ const sourceStylesPath = path.join(repoRoot, "src", "styles", "site.css");
 const sourceSearchScriptPath = path.join(repoRoot, "src", "scripts", "search.js");
 const sourceRouterScriptPath = path.join(repoRoot, "src", "scripts", "router.js");
 const sourceExpandCollapseScriptPath = path.join(repoRoot, "src", "scripts", "expand-collapse.js");
+const sourceImageLightboxScriptPath = path.join(repoRoot, "src", "scripts", "image-lightbox.js");
+const contentImagesRoot = path.join(repoRoot, "content", "images");
 const outputStylesPath = path.join(distDirectory, "styles", "site.css");
 const outputSearchScriptPath = path.join(distDirectory, "scripts", "search.js");
 const outputRouterScriptPath = path.join(distDirectory, "scripts", "router.js");
 const outputExpandCollapseScriptPath = path.join(distDirectory, "scripts", "expand-collapse.js");
+const outputImageLightboxScriptPath = path.join(distDirectory, "scripts", "image-lightbox.js");
+
+const ALLOWED_IMAGE_EXTENSIONS = new Set([".jpg", ".jpeg", ".png", ".webp", ".avif", ".gif", ".svg"]);
 
 function parseFrontmatter(markdown, filePath) {
     if (!markdown.startsWith("---\n")) {
@@ -110,17 +116,100 @@ function toHeadingLabel(value) {
         .replace(/\b\w/g, (char) => char.toUpperCase());
 }
 
-function toMultilineParagraphs(text) {
-    if (!text) {
+function parseStandaloneMarkdownImage(trimmedLine) {
+    const match = trimmedLine.match(/^!\[([^\]]*)\]\(\s*(\S+)(?:\s+"([^"]*)")?\s*\)$/);
+    if (!match) {
+        return null;
+    }
+    return {
+        alt: match[1],
+        path: match[2],
+        caption: match[3] !== undefined ? match[3] : null
+    };
+}
+
+function assertValidImageRelativePath(relativePath, itemFileName, lineText) {
+    const trimmed = relativePath.trim();
+    if (!trimmed) {
+        throw new Error(`${itemFileName}: image path is empty in "${lineText}"`);
+    }
+    if (trimmed.startsWith("/") || trimmed.startsWith("\\")) {
+        throw new Error(`${itemFileName}: image path must be relative to content/images (no leading slash): "${lineText}"`);
+    }
+    const segments = trimmed.replace(/\\/g, "/").split("/");
+    if (segments.some((segment) => segment === "..")) {
+        throw new Error(`${itemFileName}: image path must not contain "..": "${lineText}"`);
+    }
+}
+
+function resolveImageForBuild(relativePath, imagesRoot, itemFileName, lineText) {
+    assertValidImageRelativePath(relativePath, itemFileName, lineText);
+    const normalizedInput = relativePath.trim().replace(/\\/g, "/");
+    const absoluteSource = path.resolve(imagesRoot, ...normalizedInput.split("/"));
+    const relativeFromRoot = path.relative(imagesRoot, absoluteSource);
+    if (relativeFromRoot.startsWith("..") || path.isAbsolute(relativeFromRoot)) {
+        throw new Error(`${itemFileName}: image path escapes content/images: "${lineText}"`);
+    }
+    const posixRel = relativeFromRoot.split(path.sep).join("/");
+    const ext = path.extname(posixRel).toLowerCase();
+    if (!ALLOWED_IMAGE_EXTENSIONS.has(ext)) {
+        throw new Error(
+            `${itemFileName}: unsupported image extension "${ext}" in "${lineText}" (allowed: ${[...ALLOWED_IMAGE_EXTENSIONS].sort().join(", ")})`
+        );
+    }
+    return { absoluteSource, posixRel };
+}
+
+function buildFigureMarkup(webPath, alt, caption) {
+    const captionBlock =
+        caption && caption.trim().length > 0
+            ? `\n    <figcaption class="catalog-item-image-caption">${escapeHtml(caption.trim())}</figcaption>`
+            : "";
+    return [
+        `<figure class="catalog-item-image">`,
+        `  <a href="${escapeHtml(webPath)}" class="catalog-item-image-link" data-image-zoom target="_blank" rel="noopener">`,
+        `    <img src="${escapeHtml(webPath)}" alt="${escapeHtml(alt)}" loading="lazy" decoding="async">`,
+        `  </a>${captionBlock}`,
+        `</figure>`
+    ].join("\n");
+}
+
+function sectionBodyToHtml(sectionText, itemFileName, referencedImages) {
+    if (!sectionText) {
         return "";
     }
 
-    return text
-        .split("\n")
-        .map((line) => line.trim())
-        .filter((line) => line.length > 0)
-        .map((line) => `<p class="text-block-line">${escapeHtml(line)}</p>`)
-        .join("\n");
+    const lines = sectionText.replace(/\r\n/g, "\n").split("\n");
+    const blocks = [];
+
+    for (const line of lines) {
+        const trimmed = line.trim();
+        if (trimmed.length === 0) {
+            continue;
+        }
+
+        const imageMatch = parseStandaloneMarkdownImage(trimmed);
+        if (imageMatch) {
+            const alt = imageMatch.alt.trim();
+            if (!alt) {
+                throw new Error(`${itemFileName}: image alt text is required (non-empty): "${trimmed}"`);
+            }
+            const { absoluteSource, posixRel } = resolveImageForBuild(imageMatch.path, contentImagesRoot, itemFileName, trimmed);
+            if (!existsSync(absoluteSource)) {
+                throw new Error(
+                    `${itemFileName}: image file not found for "${trimmed}" (expected content/images/${posixRel})`
+                );
+            }
+            referencedImages.add(posixRel);
+            const webPath = `./images/${posixRel}`;
+            blocks.push(buildFigureMarkup(webPath, alt, imageMatch.caption));
+            continue;
+        }
+
+        blocks.push(`<p class="text-block-line">${escapeHtml(trimmed)}</p>`);
+    }
+
+    return blocks.join("\n");
 }
 
 function indentLines(text, spaces) {
@@ -237,9 +326,10 @@ function groupItems(items, groupByField) {
     return map;
 }
 
-function buildItemMarkup(item, config) {
+function buildItemMarkup(item, config, referencedImages) {
     const title = item.fields[config.titleField] ?? "";
     const slug = item.fields[config.slugField] ?? "";
+    const itemFileName = item._sourceFile ?? "unknown-item.md";
     const searchText = buildSearchText(item, config);
     const metadataValues = config.metadata
         .map((field) => item.fields[field]?.trim() ?? "")
@@ -254,10 +344,11 @@ function buildItemMarkup(item, config) {
             }
 
             const label = toHeadingLabel(sectionName);
+            const bodyHtml = sectionBodyToHtml(content, itemFileName, referencedImages);
             return [
                 `<h4>${escapeHtml(label)}</h4>`,
                 "<div>",
-                indentLines(toMultilineParagraphs(content), 4),
+                indentLines(bodyHtml, 4),
                 "</div>"
             ].join("\n");
         })
@@ -325,12 +416,13 @@ async function buildSite() {
                 throw new Error(`Item ${fileName} is missing required field "${requiredField}"`);
             }
         }
-        items.push(item);
+        items.push({ ...item, _sourceFile: fileName });
     }
 
     items.sort((left, right) => (left.fields[titleField] ?? "").localeCompare(right.fields[titleField] ?? ""));
 
     const itemConfig = { titleField, slugField, metadata, sections, searchFields };
+    const referencedImages = new Set();
 
     const groupMap = groupItems(items, groupByField);
     let indexNav = "";
@@ -351,7 +443,7 @@ async function buildSite() {
             .map((label) => {
                 const slug = slugifyGroupLabel(label);
                 const itemsForGroup = groupMap.get(label) ?? [];
-                const itemMarkup = itemsForGroup.map((item) => buildItemMarkup(item, itemConfig)).join("\n");
+                const itemMarkup = itemsForGroup.map((item) => buildItemMarkup(item, itemConfig, referencedImages)).join("\n");
                 const groupHeadingLabel = escapeHtml(label);
                 return [
                     `                <section class="group-section" id="group-${escapeHtml(slug)}" data-group-section="${escapeHtml(slug)}">`,
@@ -370,7 +462,7 @@ async function buildSite() {
             })
             .join("\n");
     } else {
-        const itemMarkup = items.map((item) => buildItemMarkup(item, itemConfig)).join("\n");
+        const itemMarkup = items.map((item) => buildItemMarkup(item, itemConfig, referencedImages)).join("\n");
         groupsMarkup = [
             "                <ul class=\"catalog-list\">",
             indentLines(itemMarkup, 16),
@@ -409,6 +501,7 @@ ${indexNav}
     <script src="./scripts/search.js" defer></script>
     <script src="./scripts/router.js" defer></script>
     <script src="./scripts/expand-collapse.js" defer></script>
+    <script src="./scripts/image-lightbox.js" defer></script>
 </head>
 <body>
     <main>
@@ -432,6 +525,15 @@ ${groupsMarkup}
     await fs.copyFile(sourceSearchScriptPath, outputSearchScriptPath);
     await fs.copyFile(sourceRouterScriptPath, outputRouterScriptPath);
     await fs.copyFile(sourceExpandCollapseScriptPath, outputExpandCollapseScriptPath);
+    await fs.copyFile(sourceImageLightboxScriptPath, outputImageLightboxScriptPath);
+
+    for (const posixRel of referencedImages) {
+        const sourcePath = path.join(contentImagesRoot, ...posixRel.split("/"));
+        const destPath = path.join(distDirectory, "images", ...posixRel.split("/"));
+        await fs.mkdir(path.dirname(destPath), { recursive: true });
+        await fs.copyFile(sourcePath, destPath);
+    }
+
     await fs.writeFile(outputHtmlPath, html, "utf-8");
     console.log(`Wrote static catalog HTML to ${outputHtmlPath}`);
 }

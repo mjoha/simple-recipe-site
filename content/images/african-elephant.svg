@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="360" viewBox="0 0 560 360" role="img" aria-label="Placeholder illustration">
+  <rect width="560" height="360" fill="#e8e1d4"/>
+  <rect x="40" y="40" width="480" height="280" rx="12" fill="#d8ccbb" stroke="#6b5333" stroke-width="2"/>
+  <text x="280" y="185" text-anchor="middle" font-family="system-ui,sans-serif" font-size="20" fill="#594326">African elephant (demo image)</text>
+</svg>

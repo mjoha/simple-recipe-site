@@ -16,6 +16,10 @@ African elephants are the largest land animals alive and shape entire ecosystems
 
 Savannahs, woodlands, and forest edges across sub-Saharan Africa where water access is seasonal but critical.
 
+![Adult elephant silhouette against warm savanna tones](african-elephant.svg "Illustrative placeholder for field-guide demo.")
+
+Seasonal movements follow water and green-up; protected corridors matter for gene flow between populations.
+
 ## Diet
 
 Grasses, bark, leaves, roots, and fruit consumed in large daily quantities.
@@ -27,6 +31,8 @@ Highly social herds led by matriarchs. Family members communicate with low-frequ
 ## Adaptation
 
 Large ears release heat, trunks handle both fine manipulation and heavy lifting, and tusks aid foraging.
+
+![Stylized study of the trunk's grasping tip](african-elephant-trunk.svg)
 
 ## Conservation
 

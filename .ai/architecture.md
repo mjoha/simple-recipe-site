@@ -6,6 +6,7 @@ Minimal static indexed Markdown site.
 
 - `content/index.md` defines collection configuration (including optional grouping via `groupBy` / `groupOrder`; without `groupBy`, the catalog is a flat list sorted by title).
 - Markdown item files in `content/items` are source content.
+- Optional bitmap/SVG assets live in `content/images/`; the build copies only files referenced by Markdown image lines into `dist/images/`.
 - A build script generates `dist/index.html`.
 - Frontend runtime is static HTML and CSS with no client framework.
 - Runtime serves static files only.
@@ -22,6 +23,8 @@ Keep structure centered around authored content and static assets:
     index.md
     items/
       *.md
+    images/
+      *.{svg,png,jpg,...}
   scripts/
     build-site.mjs
     serve-dist.mjs
@@ -30,10 +33,13 @@ Keep structure centered around authored content and static assets:
       site.css
     scripts/
       search.js
+      image-lightbox.js
   dist/
     index.html
     styles/
       site.css
+    images/
+      (referenced assets only)
 ```
 
 The exact structure can evolve. Prefer clarity over strict layering.

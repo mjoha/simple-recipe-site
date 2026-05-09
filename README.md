@@ -22,6 +22,7 @@ Local site: `http://localhost:5002/`
 - Optional **`groupBy`**: name of an item frontmatter field used to segment the index (for example `kind` or `course`). When set, the build emits a row of group chips and one section per distinct value; items missing the field go in **Other** (listed last). Omit `groupBy` for a single flat list sorted by title.
 - Optional **`groupOrder`**: comma-separated group labels in display order. Labels not listed are appended alphabetically after the ordered groups (still with **Other** last). Entries in `groupOrder` that have no items are skipped.
 - Source item files live in `content/items/*.md`.
+- **Images**: put files under `content/images/` and reference them from section bodies with Markdown on its **own line**: `![Alt text](filename.ext)` or `![Alt text](filename.ext "Optional caption")`. Paths are relative to `content/images/` (no leading `/`, no `..`). **Alt text is required.** Only referenced files are copied to `dist/images/` at build time. Allowed extensions: `.jpg`, `.jpeg`, `.png`, `.webp`, `.avif`, `.gif`, `.svg`. With JavaScript enabled, clicking a preview opens an in-page lightbox; without JS, the link opens the image in a new tab. Prefer reasonably sized files (the build does not resize images).
 - Hand-authored browser assets live in `src/styles/` and `src/scripts/`.
 - `npm run build` generates `dist/index.html` from Markdown and copies assets into `dist/`.
 - Keep source changes in `content/`, `src/`, and `scripts/`; treat `dist/` as generated output.

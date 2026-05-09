@@ -113,6 +113,12 @@
       "title": "Clear expanded state and bulk toggles",
       "status": "done",
       "spec": ".ai/features/019-expanded-state-and-bulk-toggles.md"
+    },
+    {
+      "id": "020-item-images",
+      "title": "Per-item images with click-to-zoom",
+      "status": "done",
+      "spec": ".ai/features/020-item-images.md"
     }
   ],
   "decisions": []

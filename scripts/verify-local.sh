@@ -97,6 +97,27 @@ if(hasGroup){
       echo "Site stylesheet is missing dark mode media query."
       exit 1
     fi
+    if ! [ -f "dist/scripts/image-lightbox.js" ]; then
+      echo "Image lightbox script is missing."
+      exit 1
+    fi
+    if ! node -e 'const fs=require("node:fs");const html=fs.readFileSync("dist/index.html","utf8");if(!html.includes("./scripts/image-lightbox.js")){process.exit(1);}'; then
+      echo "Generated index.html does not reference image-lightbox.js."
+      exit 1
+    fi
+    if ! node -e '
+const fs=require("fs");
+const path=require("path");
+const html=fs.readFileSync("dist/index.html","utf8");
+if(!html.includes("catalog-item-image")){process.exit(0);}
+const dir=path.join("dist","images");
+if(!fs.existsSync(dir)){process.exit(1);}
+const entries=fs.readdirSync(dir);
+if(entries.length===0){process.exit(1);}
+'; then
+      echo "Built HTML references inline images but dist/images is missing or empty."
+      exit 1
+    fi
     echo "Local verification passed."
     exit 0
   fi

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="560" height="360" viewBox="0 0 560 360" role="img" aria-label="Placeholder illustration">
+  <rect width="560" height="360" fill="#f2ebe0"/>
+  <ellipse cx="280" cy="200" rx="160" ry="90" fill="#c9bba8" stroke="#6b5333" stroke-width="2"/>
+  <text x="280" y="210" text-anchor="middle" font-family="system-ui,sans-serif" font-size="18" fill="#231d16">Trunk detail (demo image)</text>
+</svg>
