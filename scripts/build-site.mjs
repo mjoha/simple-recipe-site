@@ -295,6 +295,9 @@ async function buildSite() {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light dark">
+    <meta name="theme-color" content="#f8f5ef" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#1c1814" media="(prefers-color-scheme: dark)">
     <title>${escapeHtml(title)}</title>
     <link rel="stylesheet" href="./styles/site.css">
     <script src="./scripts/search.js" defer></script>

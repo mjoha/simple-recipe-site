@@ -52,6 +52,18 @@ for _ in {1..30}; do
       echo "Generated index.html does not reference router.js."
       exit 1
     fi
+    if ! node -e 'const fs=require("node:fs");const html=fs.readFileSync("dist/index.html","utf8");if(!html.includes("name=\"color-scheme\"")){process.exit(1);}'; then
+      echo "Generated index.html is missing color-scheme meta."
+      exit 1
+    fi
+    if ! node -e 'const fs=require("node:fs");const html=fs.readFileSync("dist/index.html","utf8");if(!html.includes("media=\"(prefers-color-scheme: light)\"")||!html.includes("media=\"(prefers-color-scheme: dark)\"")){process.exit(1);}'; then
+      echo "Generated index.html is missing theme-color meta for light and dark."
+      exit 1
+    fi
+    if ! node -e 'const fs=require("node:fs");const css=fs.readFileSync("dist/styles/site.css","utf8");if(!css.includes("prefers-color-scheme: dark")){process.exit(1);}'; then
+      echo "Site stylesheet is missing dark mode media query."
+      exit 1
+    fi
     echo "Local verification passed."
     exit 0
   fi

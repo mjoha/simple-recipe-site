@@ -95,6 +95,12 @@
       "title": "Deep-linkable items via fragment routing",
       "status": "done",
       "spec": ".ai/features/016-deep-linkable-items.md"
+    },
+    {
+      "id": "017-dark-mode",
+      "title": "Dark mode via prefers-color-scheme",
+      "status": "done",
+      "spec": ".ai/features/017-dark-mode.md"
     }
   ],
   "decisions": []
