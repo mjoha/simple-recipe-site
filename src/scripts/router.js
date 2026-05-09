@@ -22,7 +22,8 @@
 
     function getItemSlugFromHash() {
         const slug = decodeHashFragment();
-        if (!slug || slug.startsWith("letter-")) {
+        // Section anchors (#group-…) are not item slugs; ignore explicitly for clarity.
+        if (!slug || slug.startsWith("group-")) {
             return null;
         }
         return slug;

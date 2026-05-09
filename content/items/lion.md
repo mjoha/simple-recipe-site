@@ -1,6 +1,7 @@
 ---
 title: Lion
 slug: lion
+kind: Mammals
 category: Mammal
 lifespan: 10-14 years in wild
 size: 120-250 kg

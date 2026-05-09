@@ -1,6 +1,7 @@
 ---
 title: Arctic Wolf
 slug: arctic-wolf
+kind: Mammals
 category: Mammal
 lifespan: 7-10 years in wild
 size: 80-100 cm at shoulder

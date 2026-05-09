@@ -1,6 +1,7 @@
 ---
 title: Red Fox
 slug: red-fox
+kind: Mammals
 category: Mammal
 lifespan: 3-5 years in wild
 size: 3-14 kg

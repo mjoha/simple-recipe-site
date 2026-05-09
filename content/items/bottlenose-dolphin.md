@@ -1,6 +1,7 @@
 ---
 title: Bottlenose Dolphin
 slug: bottlenose-dolphin
+kind: Mammals
 category: Marine Mammal
 lifespan: 30-50 years
 size: 2-4 m length

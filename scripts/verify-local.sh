@@ -32,8 +32,20 @@ for _ in {1..30}; do
       echo "Generated index.html does not contain expected catalog markup."
       exit 1
     fi
-    if ! node -e 'const fs=require("node:fs");const html=fs.readFileSync("dist/index.html","utf8");const count=(html.match(/data-letter=\"[A-Z]\"/g)||[]).length;if(count!==26){process.exit(1);}'; then
-      echo "Generated index.html does not contain full A-Z letter navigation."
+    if ! node -e '
+const fs=require("node:fs");
+const html=fs.readFileSync("dist/index.html","utf8");
+if(!html.includes("<ul class=\"catalog-list\">")||!html.includes("<li ")){process.exit(1);}
+const cfg=fs.readFileSync("content/index.md","utf8");
+const m=cfg.match(/^groupBy:\s*(\S+)/m);
+const hasGroup=m&&m[1]&&m[1].trim().length>0;
+if(hasGroup){
+  if(!html.includes("class=\"group-section\"")||!html.includes("class=\"group-button\"")||!html.includes("id=\"group-index\"")){process.exit(1);}
+}else{
+  if(html.includes("class=\"group-section\"")||html.includes("id=\"group-index\"")){process.exit(1);}
+}
+'; then
+      echo "Generated index.html grouping markup does not match content/index.md groupBy configuration."
       exit 1
     fi
     if ! [ -f "dist/styles/site.css" ]; then

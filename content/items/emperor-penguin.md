@@ -1,6 +1,7 @@
 ---
 title: Emperor Penguin
 slug: emperor-penguin
+kind: Birds
 category: Bird
 lifespan: 15-20 years
 size: Around 115 cm tall

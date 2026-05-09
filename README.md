@@ -19,6 +19,8 @@ Local site: `http://localhost:5002/`
 ## Authoring Content
 
 - Collection config lives in `content/index.md`.
+- Optional **`groupBy`**: name of an item frontmatter field used to segment the index (for example `kind` or `course`). When set, the build emits a row of group chips and one section per distinct value; items missing the field go in **Other** (listed last). Omit `groupBy` for a single flat list sorted by title.
+- Optional **`groupOrder`**: comma-separated group labels in display order. Labels not listed are appended alphabetically after the ordered groups (still with **Other** last). Entries in `groupOrder` that have no items are skipped.
 - Source item files live in `content/items/*.md`.
 - Hand-authored browser assets live in `src/styles/` and `src/scripts/`.
 - `npm run build` generates `dist/index.html` from Markdown and copies assets into `dist/`.

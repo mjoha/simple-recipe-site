@@ -1,6 +1,7 @@
 ---
 title: Reef Octopus
 slug: reef-octopus
+kind: Cephalopods
 category: Cephalopod
 lifespan: 1-2 years
 size: Up to 1 m arm span

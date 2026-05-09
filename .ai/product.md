@@ -25,7 +25,7 @@ Author Markdown -> build site -> browse index -> open entry -> read/share.
 Secondary flows:
 
 - Filter entries with in-page search.
-- Jump by letter navigation.
+- Jump by group navigation when the author configures grouping (`groupBy`); otherwise browse a single sorted list.
 - Share direct links to generated entry anchors.
 
 ---

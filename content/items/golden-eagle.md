@@ -1,6 +1,7 @@
 ---
 title: Golden Eagle
 slug: golden-eagle
+kind: Birds
 category: Bird
 lifespan: 20-30 years
 size: 1.8-2.3 m wingspan

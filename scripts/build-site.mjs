@@ -158,6 +158,83 @@ function itemHasRequiredField(item, fieldName) {
     return typeof sectionValue === "string" && sectionValue.trim().length > 0;
 }
 
+const OTHER_GROUP_LABEL = "Other";
+
+function slugifyGroupLabel(label) {
+    return label
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[^a-z0-9-]/g, "");
+}
+
+function assertUniqueGroupSlugs(orderedLabels) {
+    const slugToLabel = new Map();
+    for (const label of orderedLabels) {
+        const slug = slugifyGroupLabel(label);
+        if (slug.length === 0) {
+            throw new Error(`Group label "${label}" slugifies to an empty id; use a non-empty label.`);
+        }
+        if (slugToLabel.has(slug)) {
+            throw new Error(
+                `Group slug collision: labels "${slugToLabel.get(slug)}" and "${label}" both map to id "group-${slug}". Rename one of the groups.`
+            );
+        }
+        slugToLabel.set(slug, label);
+    }
+}
+
+/**
+ * @param {Map<string, unknown[]>} groupMap
+ * @param {string[]} groupOrderList
+ */
+function orderGroupLabels(groupMap, groupOrderList) {
+    const labels = [...groupMap.keys()];
+
+    function pinOtherLast(keys) {
+        const nonOther = keys.filter((key) => key !== OTHER_GROUP_LABEL).sort((a, b) => a.localeCompare(b));
+        if (keys.includes(OTHER_GROUP_LABEL)) {
+            return [...nonOther, OTHER_GROUP_LABEL];
+        }
+        return nonOther;
+    }
+
+    if (groupOrderList.length === 0) {
+        return pinOtherLast(labels);
+    }
+
+    const ordered = [];
+    const seen = new Set();
+    for (const label of groupOrderList) {
+        const itemsForLabel = groupMap.get(label);
+        if (itemsForLabel && itemsForLabel.length > 0) {
+            ordered.push(label);
+            seen.add(label);
+        }
+    }
+    const leftover = labels.filter((label) => !seen.has(label));
+    return [...ordered, ...pinOtherLast(leftover)];
+}
+
+/**
+ * @returns {Map<string, unknown[]> | null}
+ */
+function groupItems(items, groupByField) {
+    if (!groupByField || typeof groupByField !== "string" || groupByField.trim().length === 0) {
+        return null;
+    }
+    const field = groupByField.trim();
+    const map = new Map();
+    for (const item of items) {
+        const raw = item.fields[field];
+        const key = typeof raw === "string" && raw.trim().length > 0 ? raw.trim() : OTHER_GROUP_LABEL;
+        const existing = map.get(key) ?? [];
+        existing.push(item);
+        map.set(key, existing);
+    }
+    return map;
+}
+
 function buildItemMarkup(item, config) {
     const title = item.fields[config.titleField] ?? "";
     const slug = item.fields[config.slugField] ?? "";
@@ -189,29 +266,16 @@ function buildItemMarkup(item, config) {
 
     return [
         `<li class="catalog-list-item" id="${escapeHtml(slug)}" data-catalog-item data-search="${escapeHtml(searchText)}">`,
-        "    <details class=\"catalog-item\">",
-        "        <summary class=\"catalog-item-toggle\">",
+        '    <details class="catalog-item">',
+        '        <summary class="catalog-item-toggle">',
         `            <h3 class="catalog-item-title">${escapeHtml(title)}</h3>`,
         "        </summary>",
-        "        <div class=\"catalog-item-detail\">",
+        '        <div class="catalog-item-detail">',
         detailChildren,
         "        </div>",
         "    </details>",
         "</li>"
     ].join("\n");
-}
-
-function groupByInitial(items, titleField) {
-    const groups = new Map();
-    for (const item of items) {
-        const title = (item.fields[titleField] ?? "").trim();
-        const first = title.length > 0 ? title[0].toUpperCase() : "#";
-        const initial = /^[\p{L}\p{N}]$/u.test(first) ? first : "#";
-        const existing = groups.get(initial) ?? [];
-        existing.push(item);
-        groups.set(initial, existing);
-    }
-    return groups;
 }
 
 async function buildSite() {
@@ -227,6 +291,9 @@ async function buildSite() {
     const searchFields = parseCsvList(config.searchFields);
     const sections = parseCsvList(config.sections);
     const metadata = parseCsvList(config.metadata);
+    const groupByRaw = typeof config.groupBy === "string" ? config.groupBy.trim() : "";
+    const groupByField = groupByRaw.length > 0 ? groupByRaw : null;
+    const groupOrderList = groupByField ? parseCsvList(config.groupOrder) : [];
 
     const sourceDirectory = path.resolve(repoRoot, source);
     const files = await fs.readdir(sourceDirectory);
@@ -235,13 +302,17 @@ async function buildSite() {
         throw new Error(`No markdown items found in ${source}`);
     }
 
+    const fieldNames = new Set([titleField, slugField, ...metadata, ...requiredFields]);
+    if (groupByField) {
+        fieldNames.add(groupByField);
+    }
+
     const items = [];
     for (const fileName of markdownFiles) {
         const markdown = await fs.readFile(path.join(sourceDirectory, fileName), "utf-8");
         const { metadata: frontmatter, body } = parseFrontmatter(markdown, fileName);
         const parsedSections = parseSections(body, sections);
         const fields = {};
-        const fieldNames = new Set([titleField, slugField, ...metadata, ...requiredFields]);
         for (const fieldName of fieldNames) {
             fields[fieldName] = frontmatter[fieldName] ?? null;
         }
@@ -256,39 +327,55 @@ async function buildSite() {
     }
 
     items.sort((left, right) => (left.fields[titleField] ?? "").localeCompare(right.fields[titleField] ?? ""));
-    const grouped = groupByInitial(items, titleField);
-    const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-    const availableLetters = new Set(alphabet.filter((letter) => grouped.has(letter)));
 
-    const indexNav = alphabet
-        .map((letter) => {
-            if (!availableLetters.has(letter)) {
-                return `            <span class="letter-index-button letter-index-button-disabled" aria-disabled="true" data-letter="${letter}">${letter}</span>`;
-            }
+    const itemConfig = { titleField, slugField, metadata, sections, searchFields };
 
-            return `            <a class="letter-index-button" href="#letter-${letter}" data-letter="${letter}">${letter}</a>`;
-        })
-        .join("\n");
+    const groupMap = groupItems(items, groupByField);
+    let indexNav = "";
+    let groupsMarkup = "";
 
-    const groupsMarkup = alphabet
-        .filter((letter) => availableLetters.has(letter))
-        .map((letter) => {
-            const itemsForInitial = grouped.get(letter) ?? [];
-            const itemMarkup = itemsForInitial
-                .map((item) => buildItemMarkup(item, { titleField, slugField, metadata, sections, searchFields }))
-                .join("\n");
-            return [
-                `                <section class="letter-section" id="letter-${letter}" data-letter-section="${letter}">`,
-                `                    <h2>${letter}</h2>`,
-                "                    <ul class=\"catalog-list\">",
-                indentLines(itemMarkup, 24),
-                "                    </ul>",
-                "                </section>"
-            ].join("\n");
-        })
-        .join("\n");
+    if (groupMap) {
+        const orderedLabels = orderGroupLabels(groupMap, groupOrderList);
+        assertUniqueGroupSlugs(orderedLabels);
+
+        indexNav = orderedLabels
+            .map((label) => {
+                const slug = slugifyGroupLabel(label);
+                return `            <a class="group-button" href="#group-${escapeHtml(slug)}" data-group="${escapeHtml(slug)}">${escapeHtml(label)}</a>`;
+            })
+            .join("\n");
+
+        groupsMarkup = orderedLabels
+            .map((label) => {
+                const slug = slugifyGroupLabel(label);
+                const itemsForGroup = groupMap.get(label) ?? [];
+                const itemMarkup = itemsForGroup.map((item) => buildItemMarkup(item, itemConfig)).join("\n");
+                return [
+                    `                <section class="group-section" id="group-${escapeHtml(slug)}" data-group-section="${escapeHtml(slug)}">`,
+                    `                    <h2>${escapeHtml(label)}</h2>`,
+                    '                    <ul class="catalog-list">',
+                    indentLines(itemMarkup, 24),
+                    "                    </ul>",
+                    "                </section>"
+                ].join("\n");
+            })
+            .join("\n");
+    } else {
+        const itemMarkup = items.map((item) => buildItemMarkup(item, itemConfig)).join("\n");
+        groupsMarkup = [
+            "                <ul class=\"catalog-list\">",
+            indentLines(itemMarkup, 16),
+            "                </ul>"
+        ].join("\n");
+    }
 
     const descriptionMarkup = description.length > 0 ? `        <p>${escapeHtml(description)}</p>\n` : "";
+    const navMarkup = groupMap
+        ? `        <nav id="group-index" aria-label="Catalog index">
+${indexNav}
+        </nav>
+`
+        : "";
 
     const html = `<!doctype html>
 <html lang="en">
@@ -309,10 +396,7 @@ async function buildSite() {
 ${descriptionMarkup}
         <input id="search-input" type="search" autocomplete="off" placeholder="Search ${escapeHtml(itemNamePlural.toLowerCase())}...">
         <p id="empty-state" hidden>No ${escapeHtml(itemNamePlural.toLowerCase())} match your search.</p>
-        <nav id="letter-index" aria-label="Catalog index">
-${indexNav}
-        </nav>
-        <section id="catalog-list-view">
+${navMarkup}        <section id="catalog-list-view">
             <div id="catalog-groups">
 ${groupsMarkup}
             </div>

@@ -1,6 +1,7 @@
 ---
 title: Giant Panda
 slug: giant-panda
+kind: Mammals
 category: Mammal
 lifespan: 20 years in wild
 size: 70-120 kg

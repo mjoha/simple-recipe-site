@@ -1,6 +1,7 @@
 ---
 title: Barn Owl
 slug: barn-owl
+kind: Birds
 category: Bird
 lifespan: 4-8 years in wild
 size: 33-39 cm length

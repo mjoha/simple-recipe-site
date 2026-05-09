@@ -11,7 +11,7 @@
     --color-accent-hover: #594326;
     --color-focus: #8b6b3d;
     --color-disabled: #a69b8d;
-    --color-letter-hover-fill: rgba(107, 83, 51, 0.06);
+    --color-group-hover-fill: rgba(107, 83, 51, 0.06);
 
     --space-1: 0.25rem;
     --space-2: 0.5rem;
@@ -32,7 +32,7 @@
         --color-accent-hover: #e7c594;
         --color-focus: #e0bd87;
         --color-disabled: #5b5246;
-        --color-letter-hover-fill: color-mix(in srgb, var(--color-accent) 18%, transparent);
+        --color-group-hover-fill: color-mix(in srgb, var(--color-accent) 18%, transparent);
     }
 }
 
@@ -91,33 +91,32 @@ input[type="search"]:focus-visible {
     font-size: 0.96rem;
 }
 
-#letter-index {
+#group-index {
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-1);
     margin: var(--space-2) 0 var(--space-5);
 }
 
-.letter-index-button {
+.group-button {
     border: 1px solid transparent;
     background: transparent;
     color: var(--color-accent);
     font: 600 0.95rem/1 var(--font-sans);
     border-radius: 0.32rem;
-    padding: 0.28rem 0.42rem;
-    min-width: 2rem;
+    padding: 0.35rem 0.55rem;
     text-align: center;
     cursor: pointer;
     text-decoration: none;
 }
 
-.letter-index-button:hover {
+.group-button:hover {
     color: var(--color-accent-hover);
     border-color: var(--color-border);
-    background: var(--color-letter-hover-fill);
+    background: var(--color-group-hover-fill);
 }
 
-.letter-index-button-disabled {
+.group-button-disabled {
     color: var(--color-disabled);
     cursor: default;
     border-color: transparent;
@@ -125,7 +124,7 @@ input[type="search"]:focus-visible {
     pointer-events: none;
 }
 
-.letter-index-button:focus-visible {
+.group-button:focus-visible {
     outline: 2px solid var(--color-focus);
     outline-offset: 2px;
 }
@@ -135,7 +134,7 @@ input[type="search"]:focus-visible {
     gap: var(--space-5);
 }
 
-.letter-section h2 {
+.group-section h2 {
     margin: 0 0 var(--space-2);
     padding-bottom: var(--space-1);
     border-bottom: 1px solid var(--color-border);

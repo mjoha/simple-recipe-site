@@ -1,6 +1,7 @@
 ---
 title: African Elephant
 slug: african-elephant
+kind: Mammals
 category: Mammal
 lifespan: 60-70 years
 size: Up to 4 m tall

@@ -4,7 +4,7 @@
 
 Minimal static indexed Markdown site.
 
-- `content/index.md` defines collection configuration.
+- `content/index.md` defines collection configuration (including optional grouping via `groupBy` / `groupOrder`; without `groupBy`, the catalog is a flat list sorted by title).
 - Markdown item files in `content/items` are source content.
 - A build script generates `dist/index.html`.
 - Frontend runtime is static HTML and CSS with no client framework.

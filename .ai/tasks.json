@@ -101,6 +101,12 @@
       "title": "Dark mode via prefers-color-scheme",
       "status": "done",
       "spec": ".ai/features/017-dark-mode.md"
+    },
+    {
+      "id": "018-configurable-grouping",
+      "title": "Configurable item grouping",
+      "status": "done",
+      "spec": ".ai/features/018-configurable-grouping.md"
     }
   ],
   "decisions": []
