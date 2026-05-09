@@ -44,6 +44,14 @@ for _ in {1..30}; do
       echo "Search enhancement script is missing."
       exit 1
     fi
+    if ! [ -f "dist/scripts/router.js" ]; then
+      echo "Fragment router script is missing."
+      exit 1
+    fi
+    if ! node -e 'const fs=require("node:fs");const html=fs.readFileSync("dist/index.html","utf8");if(!html.includes("./scripts/router.js")){process.exit(1);}'; then
+      echo "Generated index.html does not reference router.js."
+      exit 1
+    fi
     echo "Local verification passed."
     exit 0
   fi

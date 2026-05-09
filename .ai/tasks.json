@@ -89,6 +89,12 @@
       "title": "Restructure output folder and split source from generated assets",
       "status": "done",
       "spec": ".ai/features/015-restructure-output-and-source-assets.md"
+    },
+    {
+      "id": "016-deep-linkable-items",
+      "title": "Deep-linkable items via fragment routing",
+      "status": "done",
+      "spec": ".ai/features/016-deep-linkable-items.md"
     }
   ],
   "decisions": []

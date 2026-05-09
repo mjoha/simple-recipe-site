@@ -10,8 +10,10 @@ const distDirectory = path.join(repoRoot, "dist");
 const outputHtmlPath = path.join(distDirectory, "index.html");
 const sourceStylesPath = path.join(repoRoot, "src", "styles", "site.css");
 const sourceSearchScriptPath = path.join(repoRoot, "src", "scripts", "search.js");
+const sourceRouterScriptPath = path.join(repoRoot, "src", "scripts", "router.js");
 const outputStylesPath = path.join(distDirectory, "styles", "site.css");
 const outputSearchScriptPath = path.join(distDirectory, "scripts", "search.js");
+const outputRouterScriptPath = path.join(distDirectory, "scripts", "router.js");
 
 function parseFrontmatter(markdown, filePath) {
     if (!markdown.startsWith("---\n")) {
@@ -296,6 +298,7 @@ async function buildSite() {
     <title>${escapeHtml(title)}</title>
     <link rel="stylesheet" href="./styles/site.css">
     <script src="./scripts/search.js" defer></script>
+    <script src="./scripts/router.js" defer></script>
 </head>
 <body>
     <main>
@@ -321,6 +324,7 @@ ${groupsMarkup}
     await fs.mkdir(path.dirname(outputSearchScriptPath), { recursive: true });
     await fs.copyFile(sourceStylesPath, outputStylesPath);
     await fs.copyFile(sourceSearchScriptPath, outputSearchScriptPath);
+    await fs.copyFile(sourceRouterScriptPath, outputRouterScriptPath);
     await fs.writeFile(outputHtmlPath, html, "utf-8");
     console.log(`Wrote static catalog HTML to ${outputHtmlPath}`);
 }
