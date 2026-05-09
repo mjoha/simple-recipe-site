@@ -64,6 +64,27 @@ if(hasGroup){
       echo "Generated index.html does not reference router.js."
       exit 1
     fi
+    if ! [ -f "dist/scripts/expand-collapse.js" ]; then
+      echo "Expand/collapse script is missing."
+      exit 1
+    fi
+    if ! node -e 'const fs=require("node:fs");const html=fs.readFileSync("dist/index.html","utf8");if(!html.includes("./scripts/expand-collapse.js")||!html.includes("data-expand-all")||!html.includes("data-collapse-all")){process.exit(1);}'; then
+      echo "Generated index.html missing expand-collapse wiring."
+      exit 1
+    fi
+    if ! node -e '
+const fs=require("node:fs");
+const html=fs.readFileSync("dist/index.html","utf8");
+const cfg=fs.readFileSync("content/index.md","utf8");
+const m=cfg.match(/^groupBy:\s*(\S+)/m);
+const hasGroup=m&&m[1]&&m[1].trim().length>0;
+if(hasGroup){
+  if(!html.includes("data-expand-group")||!html.includes("data-collapse-group")){process.exit(1);}
+}
+'; then
+      echo "Grouped catalog missing group expand/collapse controls."
+      exit 1
+    fi
     if ! node -e 'const fs=require("node:fs");const html=fs.readFileSync("dist/index.html","utf8");if(!html.includes("name=\"color-scheme\"")){process.exit(1);}'; then
       echo "Generated index.html is missing color-scheme meta."
       exit 1

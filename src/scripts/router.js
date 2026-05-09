@@ -130,15 +130,19 @@
             if (applyingHash) {
                 return;
             }
+            // Bulk expand/collapse updates openOrder via toggles but must not change the URL or scroll (expand-collapse.js sets dataset.bulkToggling).
+            const bulk = document.documentElement.dataset.bulkToggling === "true";
             if (details.open) {
                 pushSlugOpen(slug);
-                history.replaceState(null, "", `#${slug}`);
-                if (!itemIntersectsViewport(item)) {
-                    item.scrollIntoView({ block: "start" });
+                if (!bulk) {
+                    history.replaceState(null, "", `#${slug}`);
+                    if (!itemIntersectsViewport(item)) {
+                        item.scrollIntoView({ block: "start" });
+                    }
                 }
             } else {
                 removeSlugFromOrder(slug);
-                if (hashEqualsSlug(slug)) {
+                if (!bulk && hashEqualsSlug(slug)) {
                     replaceHashFromOpenOrder();
                 }
             }

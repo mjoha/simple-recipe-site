@@ -11,9 +11,11 @@ const outputHtmlPath = path.join(distDirectory, "index.html");
 const sourceStylesPath = path.join(repoRoot, "src", "styles", "site.css");
 const sourceSearchScriptPath = path.join(repoRoot, "src", "scripts", "search.js");
 const sourceRouterScriptPath = path.join(repoRoot, "src", "scripts", "router.js");
+const sourceExpandCollapseScriptPath = path.join(repoRoot, "src", "scripts", "expand-collapse.js");
 const outputStylesPath = path.join(distDirectory, "styles", "site.css");
 const outputSearchScriptPath = path.join(distDirectory, "scripts", "search.js");
 const outputRouterScriptPath = path.join(distDirectory, "scripts", "router.js");
+const outputExpandCollapseScriptPath = path.join(distDirectory, "scripts", "expand-collapse.js");
 
 function parseFrontmatter(markdown, filePath) {
     if (!markdown.startsWith("---\n")) {
@@ -350,9 +352,16 @@ async function buildSite() {
                 const slug = slugifyGroupLabel(label);
                 const itemsForGroup = groupMap.get(label) ?? [];
                 const itemMarkup = itemsForGroup.map((item) => buildItemMarkup(item, itemConfig)).join("\n");
+                const groupHeadingLabel = escapeHtml(label);
                 return [
                     `                <section class="group-section" id="group-${escapeHtml(slug)}" data-group-section="${escapeHtml(slug)}">`,
-                    `                    <h2>${escapeHtml(label)}</h2>`,
+                    `                    <div class="group-heading">`,
+                    `                        <h2>${groupHeadingLabel}</h2>`,
+                    `                        <div class="group-controls">`,
+                    `                            <button type="button" data-expand-group="${escapeHtml(slug)}" aria-label="Expand ${groupHeadingLabel}">Expand</button>`,
+                    `                            <button type="button" data-collapse-group="${escapeHtml(slug)}" aria-label="Collapse ${groupHeadingLabel}">Collapse</button>`,
+                    `                        </div>`,
+                    `                    </div>`,
                     '                    <ul class="catalog-list">',
                     indentLines(itemMarkup, 24),
                     "                    </ul>",
@@ -370,6 +379,16 @@ async function buildSite() {
     }
 
     const descriptionMarkup = description.length > 0 ? `        <p>${escapeHtml(description)}</p>\n` : "";
+    const catalogToolbarMarkup = `        <div class="catalog-toolbar">
+            <div class="catalog-toolbar-search">
+                <input id="search-input" type="search" autocomplete="off" placeholder="Search ${escapeHtml(itemNamePlural.toLowerCase())}...">
+            </div>
+            <div class="catalog-controls" aria-label="Catalog controls">
+                <button type="button" data-expand-all>Expand all</button>
+                <button type="button" data-collapse-all>Collapse all</button>
+            </div>
+        </div>
+`;
     const navMarkup = groupMap
         ? `        <nav id="group-index" aria-label="Catalog index">
 ${indexNav}
@@ -389,13 +408,13 @@ ${indexNav}
     <link rel="stylesheet" href="./styles/site.css">
     <script src="./scripts/search.js" defer></script>
     <script src="./scripts/router.js" defer></script>
+    <script src="./scripts/expand-collapse.js" defer></script>
 </head>
 <body>
     <main>
         <h1>${escapeHtml(title)}</h1>
 ${descriptionMarkup}
-        <input id="search-input" type="search" autocomplete="off" placeholder="Search ${escapeHtml(itemNamePlural.toLowerCase())}...">
-        <p id="empty-state" hidden>No ${escapeHtml(itemNamePlural.toLowerCase())} match your search.</p>
+${catalogToolbarMarkup}        <p id="empty-state" hidden>No ${escapeHtml(itemNamePlural.toLowerCase())} match your search.</p>
 ${navMarkup}        <section id="catalog-list-view">
             <div id="catalog-groups">
 ${groupsMarkup}
@@ -412,6 +431,7 @@ ${groupsMarkup}
     await fs.copyFile(sourceStylesPath, outputStylesPath);
     await fs.copyFile(sourceSearchScriptPath, outputSearchScriptPath);
     await fs.copyFile(sourceRouterScriptPath, outputRouterScriptPath);
+    await fs.copyFile(sourceExpandCollapseScriptPath, outputExpandCollapseScriptPath);
     await fs.writeFile(outputHtmlPath, html, "utf-8");
     console.log(`Wrote static catalog HTML to ${outputHtmlPath}`);
 }

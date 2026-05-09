@@ -12,6 +12,9 @@
     --color-focus: #8b6b3d;
     --color-disabled: #a69b8d;
     --color-group-hover-fill: rgba(107, 83, 51, 0.06);
+    --color-expanded-bg: rgba(107, 83, 51, 0.055);
+    --color-expanded-border: rgba(107, 83, 51, 0.28);
+    --color-expanded-rail: var(--color-accent);
 
     --space-1: 0.25rem;
     --space-2: 0.5rem;
@@ -33,6 +36,9 @@
         --color-focus: #e0bd87;
         --color-disabled: #5b5246;
         --color-group-hover-fill: color-mix(in srgb, var(--color-accent) 18%, transparent);
+        --color-expanded-bg: color-mix(in srgb, var(--color-accent) 10%, transparent);
+        --color-expanded-border: color-mix(in srgb, var(--color-accent) 30%, var(--color-border));
+        --color-expanded-rail: var(--color-accent);
     }
 }
 
@@ -85,6 +91,28 @@ input[type="search"]:focus-visible {
     border-color: var(--color-focus);
 }
 
+.catalog-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin: 0 0 var(--space-2);
+}
+
+.catalog-toolbar-search {
+    flex: 1 1 12rem;
+    min-width: 0;
+}
+
+.catalog-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    align-items: center;
+    justify-content: flex-end;
+}
+
 #empty-state {
     margin: var(--space-3) 0 var(--space-2);
     color: var(--color-muted);
@@ -134,12 +162,54 @@ input[type="search"]:focus-visible {
     gap: var(--space-5);
 }
 
-.group-section h2 {
+.group-heading {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-2) var(--space-4);
     margin: 0 0 var(--space-2);
     padding-bottom: var(--space-1);
     border-bottom: 1px solid var(--color-border);
+}
+
+.group-heading h2 {
+    margin: 0;
     font: 600 1.15rem/1.2 var(--font-sans);
     letter-spacing: 0.02em;
+}
+
+.group-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    align-items: center;
+}
+
+.catalog-controls button,
+.group-controls button {
+    border: none;
+    background: transparent;
+    padding: 0.15rem 0.35rem;
+    margin: 0;
+    color: var(--color-muted);
+    font: 500 0.82rem/1.2 var(--font-sans);
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+    transition: color 0.12s ease;
+}
+
+.catalog-controls button:hover,
+.group-controls button:hover {
+    color: var(--color-accent);
+}
+
+.catalog-controls button:focus-visible,
+.group-controls button:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+    border-radius: 0.2rem;
 }
 
 .catalog-list {
@@ -151,10 +221,12 @@ input[type="search"]:focus-visible {
 }
 
 .catalog-item[open] {
-    margin: var(--space-1) 0;
-    padding: var(--space-2) 0;
-    border-top: 1px solid var(--color-border);
-    border-bottom: 1px solid var(--color-border);
+    margin: var(--space-2) 0;
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid var(--color-expanded-border);
+    border-left: 0.25rem solid var(--color-expanded-rail);
+    border-radius: 0.5rem;
+    background: var(--color-expanded-bg);
 }
 
 .catalog-item-toggle {
